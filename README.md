@@ -7,7 +7,7 @@
 <p>1. Git clone</p>
 
 ```
-git clone 
+git clone < link-repo >
 ```
 
 <p>2. Inicializar projeto</p>
