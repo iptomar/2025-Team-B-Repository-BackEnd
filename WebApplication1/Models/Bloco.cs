@@ -7,9 +7,13 @@ namespace WebApplication1.Models
     {
         [Key]
         public int id_bloco { get; set; }
-        
+
+        [Required]
+        [StringLength(5)]
         public string hora_inicio { get; set; }
 
+        [Required]
+        [StringLength(5)]
         public string hora_fim { get; set; }
 
         [ForeignKey(nameof(sala))]

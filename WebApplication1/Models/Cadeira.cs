@@ -7,9 +7,11 @@ namespace WebApplication1.Models
         [Key]
         public int id_cadeira { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string nome_cadeira { get; set; }
 
+        [Required]
         public int carga_total { get; set; }
 
         public ICollection<Tipologia_Cadeira> FKTipologia_Cadeira { get; set; }

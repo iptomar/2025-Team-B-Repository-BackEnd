@@ -12,6 +12,12 @@ namespace WebApplication1.Models
         public int id_curso { get; set; }
         public Curso curso { get; set; }
 
+        [Required]
+        public DateOnly data_inicio { get; set; }
+
+        [Required]
+        public DateOnly data_fim { get; set; }
+
         public ICollection<Registo> FKRegisto { get; set; }
 
         public ICollection<Bloco_Horario> FKBlocoHorario { get; set;}

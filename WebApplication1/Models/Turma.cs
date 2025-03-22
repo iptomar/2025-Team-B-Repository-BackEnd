@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models
@@ -6,6 +7,7 @@ namespace WebApplication1.Models
     [PrimaryKey(nameof(letra_turma), nameof(ano_academico), nameof(semestre))]
     public class Turma
     {
+        [StringLength(1)]
         public string letra_turma { get; set; }
 
         public int ano_academico { get; set; }

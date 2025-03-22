@@ -7,6 +7,7 @@ namespace WebApplication1.Models
         [Key]
         public int id_instituicao { get; set; }
 
+        [Required]
         [StringLength(100)]
         public string nome_instituicao { get; set; }
 

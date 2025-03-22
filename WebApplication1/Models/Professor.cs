@@ -7,9 +7,11 @@ namespace WebApplication1.Models
         [Key]
         public int id_professor { get; set; }
 
+        [Required]
         [StringLength(20)]
         public string nome { get; set; }
 
+        [Required]
         [StringLength(20)]
         public string apelido { get; set; }
 

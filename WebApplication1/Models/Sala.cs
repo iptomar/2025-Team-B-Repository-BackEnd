@@ -12,6 +12,7 @@ namespace WebApplication1.Models
         public int id_localidade { get; set; }
         public Localidade localidade { get; set; }
 
+        [Required]
         [StringLength(20)]
         public string nome_sala { get; set; }
 
