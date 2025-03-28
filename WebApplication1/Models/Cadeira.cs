@@ -5,14 +5,14 @@ namespace WebApplication1.Models
     public class Cadeira
     {
         [Key]
-        public int id_cadeira { get; set; }
+        public int Id_cadeira { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string nome_cadeira { get; set; }
+        public string Nome_cadeira { get; set; }
 
         [Required]
-        public int carga_total { get; set; }
+        public int Carga_total { get; set; }
 
         public ICollection<Tipologia_Cadeira> FKTipologia_Cadeira { get; set; }
         public ICollection<Professor_Cadeira> FKProfessor_Cadeira { get; set; }

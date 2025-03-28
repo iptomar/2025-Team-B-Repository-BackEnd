@@ -6,19 +6,19 @@ namespace WebApplication1.Models
     public class Bloco
     {
         [Key]
-        public int id_bloco { get; set; }
+        public int Id_bloco { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string hora_inicio { get; set; }
+        public string Hora_inicio { get; set; }
 
         [Required]
         [StringLength(5)]
-        public string hora_fim { get; set; }
+        public string Hora_fim { get; set; }
 
-        [ForeignKey(nameof(sala))]
-        public int id_sala { get; set; }
-        public Sala sala { get; set; }
+        [ForeignKey(nameof(Id_sala))]
+        public int Sala { get; set; }
+        public Sala Id_sala { get; set; }
 
         public ICollection<Bloco_Horario> FKBlocoHorario { get; set; }
     }

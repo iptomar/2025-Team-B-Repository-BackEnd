@@ -7,16 +7,16 @@ namespace WebApplication1.Models
     public class Curso
     {
         [Key]
-        public int id_curso { get; set; }
+        public int Id_curso { get; set; }
 
         [StringLength(255)]
-        public string nome { get; set; }
+        public string Nome { get; set; }
 
-        public int ano { get; set; }
+        public int Ano { get; set; }
 
-        [ForeignKey(nameof(grau))]
-        public int id_grau { get; set; }
-        public Grau grau { get; set; }
+        [ForeignKey(nameof(Id_grau))]
+        public int Grau { get; set; }
+        public Grau Id_grau { get; set; }
 
         public ICollection<Horario> FKHorario { get; set; }   
         public ICollection<Turma> FKTurma { get; set; }

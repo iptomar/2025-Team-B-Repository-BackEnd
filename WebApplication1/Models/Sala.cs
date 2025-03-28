@@ -6,15 +6,15 @@ namespace WebApplication1.Models
     public class Sala
     {
         [Key]
-        public int id_sala { get; set; }
+        public int Id_sala { get; set; }
 
-        [ForeignKey(nameof(localidade))]
-        public int id_localidade { get; set; }
-        public Localidade localidade { get; set; }
+        [ForeignKey(nameof(Localidade))]
+        public int Localidade { get; set; }
+        public Localidade Id_localidade { get; set; }
 
         [Required]
         [StringLength(20)]
-        public string nome_sala { get; set; }
+        public string Nome_sala { get; set; }
 
         public ICollection<Bloco> FKBloco { get; set; }
 

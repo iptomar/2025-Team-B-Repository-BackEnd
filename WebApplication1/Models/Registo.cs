@@ -6,18 +6,18 @@ namespace WebApplication1.Models
     public class Registo
     {
         [Key]
-        public int id_registo { get; set; }
+        public int Id_registo { get; set; }
 
-        [ForeignKey(nameof(utilizador))]
-        public int id_utilizadot { get; set; }
-        public Utilizador utilizador { get; set; }
+        [ForeignKey(nameof(Id_utilizador))]
+        public int Utilizadot { get; set; }
+        public Utilizador Id_utilizador { get; set; }
 
-        [ForeignKey(nameof(horario))]
-        public int id_horario { get; set; }
-        public Horario horario { get; set; }
+        [ForeignKey(nameof(Id_horario))]
+        public int Horario { get; set; }
+        public Horario Id_horario { get; set; }
 
         [Required]
         [StringLength(1024)]
-        public string motivo { get; set; }
+        public string Motivo { get; set; }
     }
 }

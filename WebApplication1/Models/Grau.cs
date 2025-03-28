@@ -7,11 +7,11 @@ namespace WebApplication1.Models
     public class Grau
     {
         [Key]
-        public int id_grau { get; set; }
+        public int Id_grau { get; set; }
 
         [StringLength(50)]
-        public string nome_grau { get; set; }
+        public string Nome_grau { get; set; }
 
-        public ICollection<Curso> curso { get; set; }
+        public ICollection<Curso> Curso { get; set; }
     }
 }
