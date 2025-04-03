@@ -12,7 +12,7 @@ namespace WebApplication1.Models
         public string Nome_cadeira { get; set; }
 
         [Required]
-        public int Carga_total { get; set; }
+        public int ECTS { get; set; }
 
         public ICollection<Tipologia_Cadeira> FKTipologia_Cadeira { get; set; }
         public ICollection<Professor_Cadeira> FKProfessor_Cadeira { get; set; }
