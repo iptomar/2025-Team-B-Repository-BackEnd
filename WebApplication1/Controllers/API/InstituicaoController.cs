@@ -37,7 +37,7 @@ namespace WebApplication1.Controllers.API
             //if (!ModelState.IsValid) { return BadRequest(ModelState); }
             await _context.Instituicao.AddAsync(instituicao);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { id = instituicao.id_instituicao }, instituicao);
+            return CreatedAtAction("Get", new { id = instituicao.Id_instituicao }, instituicao);
         }
 
         [HttpPut("{id}")]
