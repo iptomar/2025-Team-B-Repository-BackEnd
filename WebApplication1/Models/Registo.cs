@@ -9,7 +9,7 @@ namespace WebApplication1.Models
         public int Id_registo { get; set; }
 
         [ForeignKey(nameof(Id_utilizador))]
-        public int Utilizadot { get; set; }
+        public int Utilizador { get; set; }
         public Utilizador Id_utilizador { get; set; }
 
         [ForeignKey(nameof(Id_horario))]

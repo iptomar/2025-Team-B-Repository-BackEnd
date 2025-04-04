@@ -6,7 +6,7 @@ namespace WebApplication1.Models
     {
         [Key]
         public int Id_localidade { get; set; }
-
+        
         [StringLength(50)]
         public string Nome_localidade { get; set; }
 
