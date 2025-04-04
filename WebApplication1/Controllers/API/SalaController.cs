@@ -1,4 +1,5 @@
 using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
@@ -57,9 +58,36 @@ public class SalaController : Controller
     }
     
     [HttpDelete]
-    public IActionResult Delete()
+    public IActionResult Delete([FromQuery] SalaDTO sala) 
     {
-        return Ok();
+        //ir buscar o ID da sala
+        //a partir desse ID, fazer a remoção da mesma
+        
+        var idSala = _context.Sala.
+            Where(s => sala.Nome_sala == s.Nome_sala).
+            Select(s => s.Id_sala).
+            First();
+        
+        //como se recebe uma string da parte do frontend, ir buscar o numero correspondente à localidade em questão
+        var localidade = _context.Localidade.
+            Where(l => l.Nome_localidade == sala.localidade).
+            Select(l => l.Id_localidade).
+            First();
+
+        Sala s1 = new Sala(); //Id_sala, localidade, Nome_sala
+        s1.Id_sala = idSala;
+        s1.localidade = localidade;
+        s1.Nome_sala = sala.Nome_sala;
+
+        if (s1.Id_sala == null || s1.localidade == null)
+        {
+            return BadRequest("Nenhuma sala com o nome indicado foi encontrada");
+        }
+        
+        _context.Sala.Remove(s1);
+        _context.SaveChanges();
+        
+        return Ok("A sala " + sala.Nome_sala + " foi removida com sucesso!");
     }
     
     [HttpPut]

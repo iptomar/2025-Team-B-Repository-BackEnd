@@ -10,14 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="275dcd1b-0e71-4a0c-983d-6a1dda2ea37b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Controllers/API/SalaController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/DTOs/LocalidadeDTO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/DTOs/SalaDTO.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/ApplicationDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Localidade.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Localidade.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Registo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Registo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Sala.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Sala.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Utilizador.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Utilizador.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.WebApplication1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WebApplication1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/API/SalaController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/API/SalaController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +115,7 @@
       <workItem from="1743726211923" duration="471000" />
       <workItem from="1743726714978" duration="5485000" />
       <workItem from="1743774031001" duration="103000" />
-      <workItem from="1743774147586" duration="2892000" />
+      <workItem from="1743774147586" duration="5717000" />
     </task>
     <servers />
   </component>
