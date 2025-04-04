@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
 
@@ -21,4 +22,6 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Grau> Grau { get; set; }
 
     public DbSet<Instituicao> Instituicao { get; set; }
+
+    //public DbSet<AspNetUserManager> UserManagers { get; set; }
 }

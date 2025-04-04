@@ -8,7 +8,7 @@ namespace WebApplication1.Models
         [Key]
         public int Id_sala { get; set; }
 
-        [ForeignKey(nameof(Localidade))]
+        [ForeignKey(nameof(Id_localidade))]
         public int Localidade { get; set; }
         public Localidade Id_localidade { get; set; }
 

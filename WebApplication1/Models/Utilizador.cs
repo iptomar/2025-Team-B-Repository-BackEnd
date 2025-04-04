@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models 
 {
     [PrimaryKey(nameof(Id_utilizador))]
     public class Utilizador
@@ -17,8 +18,8 @@ namespace WebApplication1.Models
 
         // Adicionar Ligação com AspNetUsers NÂO SEI COMO FAZER
         //[ForeignKey(nameof(Utilizador))]
-        public string Id_utilizador { get; set; }
-        //public AspNetUserManager Utilizador { get; set; }
+        public int Id_utilizador { get; set; }
+        //public ApplicationUser Utilizador { get; set; }
 
         public ICollection<Registo> FKRegisto { get; set; }
 
