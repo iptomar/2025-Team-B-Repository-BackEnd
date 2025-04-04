@@ -6,7 +6,7 @@ namespace WebApplication1.Data
     {
         public static async Task Initialize(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            string[] roleNames = { "Admistrador", "Docente", "Comissão de Horários", "Comissão de Cursos", "Diretor/a" };
+            string[] roleNames = { "Admistrador", "Docente", "Coordenador de Curso", "Comissão de Horários", "Comissão de Cursos", "Diretor/a" };
 
             foreach (var roleName in roleNames)
             {
