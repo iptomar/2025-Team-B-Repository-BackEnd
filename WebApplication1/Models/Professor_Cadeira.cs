@@ -3,16 +3,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models
 {
-    [PrimaryKey(nameof(id_professor), nameof(id_cadeira))]
+    [PrimaryKey(nameof(ID), nameof(Id_professor), nameof(Id_cadeira))]
     public class Professor_Cadeira
     {
-        [ForeignKey(nameof(professor))]
-        public int id_professor { get; set; }
-        public Professor professor { get; set; }
+        public int ID { get; set; }
 
-        [ForeignKey(nameof(cadeira))]
-        public int id_cadeira { get; set; }
-        public Cadeira cadeira { get; set; }
+        [ForeignKey(nameof(Professor))]
+        public int Id_professor { get; set; }
+        public Professor Professor { get; set; }
+
+        [ForeignKey(nameof(Cadeira))]
+        public int Id_cadeira { get; set; }
+        public Cadeira Cadeira { get; set; }
 
     }
 }

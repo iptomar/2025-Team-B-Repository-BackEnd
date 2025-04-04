@@ -6,17 +6,17 @@ namespace WebApplication1.Models
     public class Horario
     {
         [Key]
-        public int id_horario { get; set; }
+        public int Id_horario { get; set; }
 
-        [ForeignKey(nameof(curso))]
-        public int id_curso { get; set; }
-        public Curso curso { get; set; }
-
-        [Required]
-        public DateOnly data_inicio { get; set; }
+        [ForeignKey(nameof(Id_curso))]
+        public int Curso { get; set; }
+        public Curso Id_curso { get; set; }
 
         [Required]
-        public DateOnly data_fim { get; set; }
+        public DateOnly Data_inicio { get; set; }
+
+        [Required]
+        public DateOnly Data_fim { get; set; }
 
         public ICollection<Registo> FKRegisto { get; set; }
 

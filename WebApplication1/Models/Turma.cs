@@ -4,18 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models
 {
-    [PrimaryKey(nameof(letra_turma), nameof(ano_academico), nameof(semestre))]
+    [PrimaryKey(nameof(Letra_turma), nameof(Ano_academico), nameof(Semestre))]
     public class Turma
     {
         [StringLength(1)]
-        public string letra_turma { get; set; }
+        public string Letra_turma { get; set; }
 
-        public int ano_academico { get; set; }
+        public int Ano_academico { get; set; }
 
-        public int semestre { get; set; }
+        public int Semestre { get; set; }
 
-        [ForeignKey(nameof(curso))]
-        public int id_curso { get; set; }
-        public Curso curso { get; set; }
+        [ForeignKey(nameof(Id_curso))]
+        public int Curso { get; set; }
+        public Curso Id_curso { get; set; }
     }
 }

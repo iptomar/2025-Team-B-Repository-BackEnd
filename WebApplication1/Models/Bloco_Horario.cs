@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models
 {
-    [PrimaryKey(nameof(id_bloco), nameof(id_horario))]
+    [PrimaryKey(nameof(Id_bloco), nameof(Id_horario))]
     public class Bloco_Horario
     {
-        [ForeignKey(nameof(bloco))]
-        public int id_bloco { get; set; }
-        public Bloco bloco { get; set; }
+        [ForeignKey(nameof(Bloco))]
+        public int Id_bloco { get; set; }
+        public Bloco Bloco { get; set; }
 
-        [ForeignKey(nameof(horario))]
-        public int id_horario { get; set; }
-        public Horario horario { get; set; }
+        [ForeignKey(nameof(Horario))]
+        public int Id_horario { get; set; }
+        public Horario Horario { get; set; }
     }
 }

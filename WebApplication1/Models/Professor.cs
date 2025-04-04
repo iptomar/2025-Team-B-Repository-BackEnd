@@ -5,15 +5,15 @@ namespace WebApplication1.Models
     public class Professor
     {
         [Key]
-        public int id_professor { get; set; }
+        public int Id_professor { get; set; }
 
         [Required]
         [StringLength(20)]
-        public string nome { get; set; }
+        public string Nome { get; set; }
 
         [Required]
         [StringLength(20)]
-        public string apelido { get; set; }
+        public string Apelido { get; set; }
 
         public ICollection<Professor_Cadeira> FKProfessor_Cadeira { get; set; }
     }

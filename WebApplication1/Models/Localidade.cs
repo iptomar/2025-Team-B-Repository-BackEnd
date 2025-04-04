@@ -5,10 +5,10 @@ namespace WebApplication1.Models
     public class Localidade
     {
         [Key]
-        public int id_localidade { get; set; }
+        public int Id_localidade { get; set; }
 
         [StringLength(50)]
-        public string localidade { get; set; }
+        public string Nome_localidade { get; set; }
 
         public ICollection<Sala> FKSala { get; set; }
 
