@@ -56,6 +56,16 @@ namespace WebApplication1.Controllers.API
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SelectNomeGrau()
+        {
+            var nome = _context.Grau.
+                Select(g => g.Nome_grau)
+                .ToListAsync();
+
+            return Ok(nome);
+        }
     }
 
 }

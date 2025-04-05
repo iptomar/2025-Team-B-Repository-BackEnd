@@ -23,5 +23,10 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Instituicao> Instituicao { get; set; }
 
-    //public DbSet<AspNetUserManager> UserManagers { get; set; }
+    public DbSet<Tipologia> Tipologia { get; set; }
+
+    public DbSet<IdentityUser> UserManager { get; set; }
+
+    public DbSet<IdentityRole> RoleManager { get; set; }
+
 }

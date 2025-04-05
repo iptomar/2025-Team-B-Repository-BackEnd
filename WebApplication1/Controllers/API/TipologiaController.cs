@@ -8,11 +8,11 @@ namespace WebApplication1.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InstituicaoController : ControllerBase
+    public class TipologiaController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public InstituicaoController(ApplicationDbContext context)
+        public TipologiaController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -20,30 +20,30 @@ namespace WebApplication1.Controllers.API
         [HttpGet]
         public async Task<IActionResult> Select()
         {
-            List<Instituicao> data = await _context.Instituicao.ToListAsync();
+            List<Tipologia> data = await _context.Tipologia.ToListAsync();
             return Ok(data);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Select_Ind(string id)
         {
-            Instituicao registo = await _context.Instituicao.FindAsync(id);
+            Tipologia registo = await _context.Tipologia.FindAsync(id);
             return Ok(registo);
         }
 
-        [HttpPost("instituicao")]
-        public async Task<IActionResult> Insert([FromBody] Instituicao instituicao)
+        [HttpPost("curso")]
+        public async Task<IActionResult> Insert([FromBody] Tipologia tipologia)
         {
             //if (!ModelState.IsValid) { return BadRequest(ModelState); }
-            await _context.Instituicao.AddAsync(instituicao);
+            await _context.Tipologia.AddAsync(tipologia);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { id = instituicao.Id_instituicao }, instituicao);
+            return CreatedAtAction("Get", new { id = tipologia.Id_tipologia }, tipologia);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(string id, [FromBody] Instituicao instituicao)
+        public async Task<IActionResult> Edit(string id, [FromBody] Tipologia tipologia)
         {
-            _context.Instituicao.Update(instituicao);
+            _context.Tipologia.Update(tipologia);
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -51,21 +51,20 @@ namespace WebApplication1.Controllers.API
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            Instituicao registo = await _context.Instituicao.FindAsync(id);
-            _context.Instituicao.Remove(registo);
+            Tipologia registo = await _context.Tipologia.FindAsync(id);
+            _context.Tipologia.Remove(registo);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpGet]
-        public async Task<IActionResult> SelectNomeInstituicao()
+        public async Task<IActionResult> SelectNomeTipologia()
         {
-            var nome = _context.Instituicao.
-                Select(i => i.Nome_instituicao)
+            var nome = _context.Tipologia.
+                Select(t => t.Nome_tipologia)
                 .ToListAsync();
 
             return Ok(nome);
         }
-
     }
 }

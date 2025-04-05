@@ -16,10 +16,10 @@ namespace WebApplication1.Models
         [StringLength(125)]
         public string Nome { get; set; }
 
-        // Adicionar Ligação com AspNetUsers NÂO SEI COMO FAZER
-        //[ForeignKey(nameof(Utilizador))]
+        // Adicionar Ligação com AspNetUsers Talvez Esteja Certo?
+        [ForeignKey(nameof(User))]
         public int Id_utilizador { get; set; }
-        //public ApplicationUser Utilizador { get; set; }
+        public IdentityUser User { get; set; }
 
         public ICollection<Registo> FKRegisto { get; set; }
 

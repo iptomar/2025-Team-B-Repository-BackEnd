@@ -56,5 +56,15 @@ namespace WebApplication1.Controllers.API
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SelectAnoCurso()
+        {
+            var ano = _context.Curso.
+                Select(c => c.Ano)
+                .ToListAsync();
+
+            return Ok(ano);
+        }
     }
 }
