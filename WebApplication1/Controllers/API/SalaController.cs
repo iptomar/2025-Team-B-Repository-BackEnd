@@ -24,7 +24,7 @@ public class SalaController : Controller
     public IActionResult Create([FromBody] SalaDTO sala)
     {
        
-        if (sala.Nome_sala == null)
+        if (sala.Nome_sala == "")
         {
             return BadRequest();
         }
@@ -66,20 +66,20 @@ public class SalaController : Controller
         var idSala = _context.Sala.
             Where(s => sala.Nome_sala == s.Nome_sala).
             Select(s => s.Id_sala).
-            First();
+            FirstOrDefault();
         
         //como se recebe uma string da parte do frontend, ir buscar o numero correspondente à localidade em questão
         var localidade = _context.Localidade.
             Where(l => l.Nome_localidade == sala.localidade).
             Select(l => l.Id_localidade).
-            First();
+            FirstOrDefault();
 
         Sala s1 = new Sala(); //Id_sala, localidade, Nome_sala
         s1.Id_sala = idSala;
         s1.localidade = localidade;
         s1.Nome_sala = sala.Nome_sala;
 
-        if (s1.Id_sala == null || s1.localidade == null)
+        if (s1.Id_sala == 0 || s1.localidade == 0)
         {
             return BadRequest("Nenhuma sala com o nome indicado foi encontrada");
         }
@@ -91,13 +91,34 @@ public class SalaController : Controller
     }
     
     [HttpPut]
-    public IActionResult Update()
+    public IActionResult Update([FromBody] SalaDTO sala)
     {
-        return Ok();
+        /*
+         * 1 - fazer a consulta na db
+         * 2 - inserir no DTO (suporta ter uma string na localidade)
+         */
+
+        var checkSala = _context.Sala.First(s => s.Nome_sala == sala.Nome_sala);
+
+        if (checkSala == null)
+        {
+            return BadRequest("Nenhuma sala com o nome indicado foi encontrada.");
+        }
+        
+        var localidade = _context.Localidade.
+            Where(l => l.Nome_localidade == sala.localidade).
+            Select(l => l.Id_localidade).
+            FirstOrDefault();
+        
+        checkSala.Nome_sala = sala.Nome_sala;
+        checkSala.localidade = localidade;
+        _context.Sala.Update(checkSala);
+        _context.SaveChanges();
+        
+        return Ok("A sala foi alterada com sucesso!");
     }
 
     [HttpGet]
-    //[Authorize]
     public IActionResult Read()
     {
         return Ok(_context.Sala.ToList());
