@@ -7,11 +7,11 @@ namespace WebApplication1.Models
     {
         [Key]
         public int Id_sala { get; set; }
-
-        [ForeignKey(nameof(Localidade))]
-        public int Localidade { get; set; }
+        
+        public int localidade { get; set; }
+        [ForeignKey(nameof(localidade))]
         public Localidade Id_localidade { get; set; }
-
+        
         [Required]
         [StringLength(20)]
         public string Nome_sala { get; set; }
