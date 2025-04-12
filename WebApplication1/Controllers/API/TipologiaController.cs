@@ -17,6 +17,9 @@ namespace WebApplication1.Controllers.API
             _context = context;
         }
 
+        /**
+        * Endpoint da Lista das Tipologias
+        */
         [HttpGet]
         public async Task<IActionResult> Select()
         {
@@ -24,14 +27,21 @@ namespace WebApplication1.Controllers.API
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Select_Ind(string id)
+        /**
+        * Endpoint para pesquisar uma tipologia
+        * @param Nome - Nome da Tipologia
+        */
+        [HttpGet("{Nome}")]
+        public async Task<IActionResult> Select_Ind(string Nome)
         {
-            Tipologia registo = await _context.Tipologia.FindAsync(id);
+            Tipologia registo = await _context.Tipologia.FindAsync(Nome);
             return Ok(registo);
         }
 
-        [HttpPost("curso")]
+        /**
+        * Endpoint para inserir uma tipologia
+        */
+        [HttpPost("tipologia")]
         public async Task<IActionResult> Insert([FromBody] Tipologia tipologia)
         {
             //if (!ModelState.IsValid) { return BadRequest(ModelState); }
@@ -41,6 +51,10 @@ namespace WebApplication1.Controllers.API
             return CreatedAtAction("Get", new { id = tipologia.Id_tipologia }, tipologia);
         }
 
+        /**
+        * Endpoint para atualizar uma tipologia
+        * @param Id - Id da Tipologia
+        */
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(string id, [FromBody] Tipologia tipologia)
         {
@@ -49,6 +63,10 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
+        /**
+        * Endpoint para eliminar uma tipologia
+        * @param Id - Id da Tipologia
+        */
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -58,9 +76,17 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
-        [HttpGet]
+        /**
+         * Endpoint destinado à Selecao do Nome da Tipologia
+         */
+        [HttpGet("SelectNomeTipologia")]
         public async Task<IActionResult> SelectNomeTipologia()
         {
+            /**
+             * Funcionamento:
+             *  - Seleciona o nome da tipologia
+             *  - Através da Tabela Tipologia
+             */
             var nome = _context.Tipologia.
                 Select(t => t.Nome_tipologia)
                 .ToListAsync();

@@ -17,6 +17,9 @@ namespace WebApplication1.Controllers.API
             _context = context;
         }
 
+        /**
+        * Endpoint da Lista de Cadeiras
+        */
         [HttpGet]
         public async Task<IActionResult> Select()
         {
@@ -24,13 +27,20 @@ namespace WebApplication1.Controllers.API
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Select_Ind(string id)
+        /**
+        * Endpoint para pesquisar uma cadeira
+        * @param Nome - Nome do Cadeira
+        */
+        [HttpGet("{Nome}")]
+        public async Task<IActionResult> Select_Ind(string Nome)
         {
-            Cadeira registo = await _context.Cadeira.FindAsync(id);
+            Cadeira registo = await _context.Cadeira.FindAsync(Nome);
             return Ok(registo);
         }
 
+        /**
+        * Endpoint para inserir uma cadeira
+        */
         [HttpPost("cadeira")]
         public async Task<IActionResult> Insert([FromBody] Cadeira cadeira)
         {
@@ -40,6 +50,10 @@ namespace WebApplication1.Controllers.API
             return CreatedAtAction("Get", new { id = cadeira.Id_cadeira }, cadeira);
         }
 
+        /**
+        * Endpoint para atualizar uma cadeira
+        * @param Id - Id do Cadeira
+        */
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(string id, [FromBody] Cadeira cadeira)
         {
@@ -48,6 +62,10 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
+        /**
+        * Endpoint para eliminar uma cadeira
+        * @param Id - Id do Cadeira
+        */
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {

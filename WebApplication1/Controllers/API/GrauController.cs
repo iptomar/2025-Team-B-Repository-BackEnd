@@ -17,6 +17,9 @@ namespace WebApplication1.Controllers.API
             _context = context;
         }
 
+        /**
+        * Endpoint da Lista de Graus
+        */
         [HttpGet]
         public async Task<IActionResult> Select()
         {
@@ -24,13 +27,20 @@ namespace WebApplication1.Controllers.API
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Select_Ind(string id)
+        /**
+        * Endpoint de pesquisa de um curso
+        * @param Nome - Nome do Curso
+        */
+        [HttpGet("{Nome}")]
+        public async Task<IActionResult> Select_Ind(string Nome)
         {
-            Grau registo = await _context.Grau.FindAsync(id);
+            Grau registo = await _context.Grau.FindAsync(Nome);
             return Ok(registo);
         }
 
+        /**
+        * Endpoint para inserir um grau
+        */
         [HttpPost("grau")]
         public async Task<IActionResult> Insert([FromBody] Grau grau)
         {
@@ -40,6 +50,10 @@ namespace WebApplication1.Controllers.API
             return CreatedAtAction("Get", new { id = grau.Id_grau }, grau);
         }
 
+        /**
+        * Endpoint para atualizar um grau
+        * @param Id - Id do Grau
+        */
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(string id, [FromBody] Grau grau)
         {
@@ -48,6 +62,10 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
+        /**
+        * Endpoint para eliminar um grau
+        * @param Id - Id do Grau
+        */
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -57,9 +75,17 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
-        [HttpGet]
+        /**
+        * Endpoint destinado à Selecao do Nome do Grau
+        */
+        [HttpGet("SelectNomeGrau")]
         public async Task<IActionResult> SelectNomeGrau()
         {
+            /**
+             * Funcionamento:
+             *  - Seleciona o nome do grau
+             *  - Através da Tabela Grau
+             */
             var nome = _context.Grau.
                 Select(g => g.Nome_grau)
                 .ToListAsync();

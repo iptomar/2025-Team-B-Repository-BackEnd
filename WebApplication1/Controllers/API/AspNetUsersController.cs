@@ -20,9 +20,17 @@ namespace WebApplication1.Controllers.API
             _context = context;
         }
 
-        [HttpGet]
+        /**
+         * Endpoint destinado à Selecao do Nome do Utilizador
+         */
+        [HttpGet("SelectUserName")]
         public async Task<IActionResult> SelectUserName()
         {
+            /**
+             * Funcionamento:
+             *  - Seleciona o nome do utilizador
+             *  - Através da Tabela AspNetUsers
+             */
             var nome = _context.UserManager.
                 Select(u => u.UserName)
                 .ToListAsync();
@@ -31,10 +39,18 @@ namespace WebApplication1.Controllers.API
         }
 
         // https://localhost:7110/api/AspNetUsers/SelectNameProfessor
-
+        /**
+        * Endpoint destinado à Selecao da Lista de Professores Coordenadores
+        */
         [HttpGet("SelectNameProfessor")]
         public async Task<IActionResult> SelectUserNameProfessorCoordenador()
         {
+            /**
+             * Funcionamento:
+             *  - Seleciona o nome do utilizador
+             *  - Através da Junção das Tabelas AspNetUsers, AspNetUserRoles, AspNetRoles
+             *  - Onde o RoleId seja igual "c0f0653e-b870-4c0a-811f-7fe82f0e8755" 
+             */
             var nome = await _context.UserManager
                 .Join(_context.UserRoles,
                     user => user.Id,

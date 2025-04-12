@@ -17,6 +17,9 @@ namespace WebApplication1.Controllers.API
             _context = context;
         }
 
+        /**
+         * Endpoint da Lista de Cursos
+         */
         [HttpGet]
         public async Task<IActionResult> Select()
         {
@@ -24,13 +27,20 @@ namespace WebApplication1.Controllers.API
             return Ok(data);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Select_Ind(string id)
+        /**
+        * Endpoint de pesquisa de um curso
+        * @param Nome - Nome do Curso
+        */
+        [HttpGet("{Nome}")]
+        public async Task<IActionResult> Select_Ind(string Nome)
         {
-            Curso registo = await _context.Curso.FindAsync(id);
+            Curso registo = await _context.Curso.FindAsync(Nome);
             return Ok(registo);
         }
 
+        /**
+        * Endpoint para inserir um novo curso
+        */
         [HttpPost("curso")]
         public async Task<IActionResult> Insert([FromBody] Curso curso)
         {
@@ -40,6 +50,10 @@ namespace WebApplication1.Controllers.API
             return CreatedAtAction("Get", new { id = curso.Id_curso }, curso);
         }
 
+        /**
+        * Endpoint para atualizar um curso
+        * @param Id - Id do Curso
+        */
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(string id, [FromBody] Curso curso)
         {
@@ -48,6 +62,10 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
+        /**
+        * Endpoint para eliminar um curso
+        * @param Id - Id do Curso
+        */
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -57,9 +75,17 @@ namespace WebApplication1.Controllers.API
             return NoContent();
         }
 
-        [HttpGet]
+        /**
+         * Endpoint destinado à Selecao do Ano do Curso
+         */
+        [HttpGet("SelectAnoCurso")]
         public async Task<IActionResult> SelectAnoCurso()
         {
+            /**
+             * Funcionamento:
+             *  - Seleciona o ano do curso
+             *  - Através da Tabela Curso
+             */
             var ano = _context.Curso.
                 Select(c => c.Ano)
                 .ToListAsync();
