@@ -35,6 +35,7 @@ namespace WebApplication1.Controllers.API
         public async Task<IActionResult> Insert([FromBody] Tipologia tipologia)
         {
             //if (!ModelState.IsValid) { return BadRequest(ModelState); }
+
             await _context.Tipologia.AddAsync(tipologia);
             await _context.SaveChangesAsync();
             return CreatedAtAction("Get", new { id = tipologia.Id_tipologia }, tipologia);

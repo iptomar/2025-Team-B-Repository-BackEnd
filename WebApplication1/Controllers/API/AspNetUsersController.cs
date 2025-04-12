@@ -30,10 +30,12 @@ namespace WebApplication1.Controllers.API
             return Ok(nome);
         }
 
-        [HttpGet]
+        // https://localhost:7110/api/AspNetUsers/SelectNameProfessor
+
+        [HttpGet("SelectNameProfessor")]
         public async Task<IActionResult> SelectUserNameProfessorCoordenador()
         {
-            var nome = await _context.Users
+            var nome = await _context.UserManager
                 .Join(_context.UserRoles,
                     user => user.Id,
                     userRole => userRole.UserId,

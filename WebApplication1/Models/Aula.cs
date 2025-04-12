@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace WebApplication1.Models
 {
     [PrimaryKey(nameof(Id_tipologia), nameof(Id_cadeira))]
-    public class Tipologia_Cadeira
+    public class Aula
     {
 
         [ForeignKey(nameof(Tipologia))]
@@ -15,6 +15,11 @@ namespace WebApplication1.Models
         public int Id_cadeira { get; set; }
         public Cadeira Cadeira { get; set; }
 
+        [ForeignKey(nameof(Professor))]
+        public int Id_professor { get; set; }
+        public Professor Professor { get; set; }
+
+        public int Duracao {  get; set; }
 
     }
 }

@@ -12,7 +12,11 @@ namespace WebApplication1.Models
         [StringLength(255)]
         public string Nome { get; set; }
 
-        public int Ano { get; set; }
+        [StringLength(7)]
+        public string Ano { get; set; }
+
+        [StringLength(450)]
+        public string Coordenador { get; set; }
 
         [ForeignKey(nameof(Id_grau))]
         public int Grau { get; set; }

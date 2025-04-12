@@ -13,7 +13,7 @@ namespace WebApplication1.Models
         public Localidade Id_localidade { get; set; }
 
         [Required]
-        [StringLength(20)]
+        [StringLength(25)]
         public string Nome_sala { get; set; }
 
         public ICollection<Bloco> FKBloco { get; set; }
