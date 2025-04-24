@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using WebApplication1.Data;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers.API
@@ -15,12 +16,14 @@ namespace WebApplication1.Controllers.API
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpPost("register")]
@@ -35,10 +38,19 @@ namespace WebApplication1.Controllers.API
 
             string role = model.Role ?? "Docente";
 
+            var novoUtilizador = new Utilizador();
+
+            novoUtilizador.IDAspNetUser = user.Id;
+            novoUtilizador.Nome = user.UserName;
+
+
             if (!await _userManager.IsInRoleAsync(user, role))
             {
                 await _userManager.AddToRoleAsync(user, role);
             }
+
+            await _context.AddAsync(novoUtilizador);
+            await _context.SaveChangesAsync();
 
             return Ok(new { message = $"Utilizador criado com sucesso com papel de {role}" });
         }

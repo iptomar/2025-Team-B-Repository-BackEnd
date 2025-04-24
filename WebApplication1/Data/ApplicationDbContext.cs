@@ -26,8 +26,13 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Tipologia> Tipologia { get; set; }
     
     public DbSet<Turma> Turma { get; set; }
+
     public DbSet<Sala> Sala { get; set; }
+
     public DbSet<Localidade> Localidade { get; set; }
+
+    public DbSet<Utilizador> Utilizadador { get; set; }
+
     public DbSet<IdentityUser> UserManager { get; set; }
 
     public DbSet<IdentityRole> RoleManager { get; set; }

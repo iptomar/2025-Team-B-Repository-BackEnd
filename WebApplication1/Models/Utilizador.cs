@@ -6,21 +6,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication1.Models 
 {
-    [PrimaryKey(nameof(Id_utilizador))]
     public class Utilizador
     {
+        [Key]
+        public int ID { get; set; }
+
         [Required]
-        public bool Estado { get; set; }
+        public bool Estado { get; set; } = true;
 
         [Required]
         [StringLength(125)]
         public string Nome { get; set; }
 
-        // Adicionar Ligação com AspNetUsers Talvez Esteja Certo?
-        [ForeignKey(nameof(User))]
-        public string Id_utilizador { get; set; }
-        public IdentityUser User { get; set; }
+        public DateOnly Data_Edit {  get; set; }
 
+
+        // String de Ligação de Credenciais ASPNetUser
+        public String IDAspNetUser { get; set; }
+
+
+        
         public ICollection<Registo> FKRegisto { get; set; }
 
     }
