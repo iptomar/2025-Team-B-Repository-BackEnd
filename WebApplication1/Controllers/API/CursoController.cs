@@ -92,5 +92,126 @@ namespace WebApplication1.Controllers.API
 
             return Ok(ano);
         }
+
+        /**
+        * Endpoint destinado à Pesquisa de Professores lecionadores de dado curso
+        */
+        [HttpGet("{ano}/ {nome}")]
+        public async Task<IActionResult> SelectProfessor_Curso(string ano, string nome)
+        {
+            var result = await _context.Curso
+                    .Join(_context.Curso_Cadeira,
+                        curso => curso.Id_curso,
+                        ccurso => ccurso.Id_curso,
+                        (curso, ccurso) => new { curso, ccurso })
+                    .Join(_context.Cadeira,
+                        cc2 => cc2.ccurso.Id_cadeira,
+                        cadeira => cadeira.Id_cadeira,
+                        (cc2, cadeira) => new { cc2, cadeira })
+                    .Join(_context.Professor_Cadeira,
+                        ccadeira => ccadeira.cadeira.Id_cadeira,
+                        pcadeira => pcadeira.Id_cadeira,
+                        (ccadeira, pcadeira) => new { ccadeira, pcadeira })
+                    .Join(_context.Professor,
+                        pc2 => pc2.pcadeira.Id_professor,
+                        professor => professor.Id_professor,
+                        (pc2, professor) => new
+                        {
+                            AnoCurso = pc2.ccadeira.cc2.curso.Ano,
+                            NomeCurso = pc2.ccadeira.cc2.curso.Nome,
+                            IdCurso = pc2.ccadeira.cc2.curso.Id_curso,
+                            NomeProfessor = professor.Nome
+
+                        })
+                    .Where(x => x.AnoCurso == ano && x.NomeCurso == nome)
+                    .Select(x => new
+                    {
+                        ID = x.IdCurso,
+                        Professores = x.NomeProfessor
+                    })
+                    .ToListAsync();
+            return Ok(result);
+        }
+
+        /**
+        * Endpoint destinado à Pesquisa de Professores lecionadores de dado curso (2)
+        */
+        [HttpGet("{ano}/ {nome}")]
+        public async Task<IActionResult> SelectProfessor_Curso_2(string ano, string nome)
+        {
+            var result = await _context.Curso
+                    .Join(_context.Curso_Cadeira,
+                        curso => curso.Id_curso,
+                        ccurso => ccurso.Id_curso,
+                        (curso, ccurso) => new { curso, ccurso })
+                    .Join(_context.Cadeira,
+                        cc2 => cc2.ccurso.Id_cadeira,
+                        cadeira => cadeira.Id_cadeira,
+                        (cc2, cadeira) => new { cc2, cadeira })
+                    .Join(_context.Professor_Cadeira,
+                        ccadeira => ccadeira.cadeira.Id_cadeira,
+                        pcadeira => pcadeira.Id_cadeira,
+                        (ccadeira, pcadeira) => new { ccadeira, pcadeira })
+                    .Join(_context.Professor,
+                        pc2 => pc2.pcadeira.Id_professor,
+                        professor => professor.Id_professor,
+                        (pc2, professor) => new
+                        {
+                            AnoCurso = pc2.ccadeira.cc2.curso.Ano,
+                            NomeCurso = pc2.ccadeira.cc2.curso.Nome,
+                            IdProfessor = professor.Id_professor,
+                            NomeProfessor = professor.Nome
+
+                        })
+                    .Where(x => x.AnoCurso == ano && x.NomeCurso == nome)
+                    .Select(x => new
+                    {
+                        ID = x.IdProfessor,
+                        Professores = x.NomeProfessor
+                    })
+                    .ToListAsync();
+            return Ok(result);
+        }
+
+        /**
+        * Endpoint destinado à Pesquisa de Professores lecionadores de dado curso e respetivas cadeiras
+        */
+        [HttpGet("{ano}/ {nome}")]
+        public async Task<IActionResult> SelectProfessor_Curso_Cadeiras(string ano, string nome)
+        {
+            var result = await _context.Curso
+                    .Join(_context.Curso_Cadeira,
+                        curso => curso.Id_curso,
+                        ccurso => ccurso.Id_curso,
+                        (curso, ccurso) => new { curso, ccurso })
+                    .Join(_context.Cadeira,
+                        cc2 => cc2.ccurso.Id_cadeira,
+                        cadeira => cadeira.Id_cadeira,
+                        (cc2, cadeira) => new { cc2, cadeira })
+                    .Join(_context.Professor_Cadeira,
+                        ccadeira => ccadeira.cadeira.Id_cadeira,
+                        pcadeira => pcadeira.Id_cadeira,
+                        (ccadeira, pcadeira) => new { ccadeira, pcadeira })
+                    .Join(_context.Professor,
+                        pc2 => pc2.pcadeira.Id_professor,
+                        professor => professor.Id_professor,
+                        (pc2, professor) => new
+                        {
+                            AnoCurso = pc2.ccadeira.cc2.curso.Ano,
+                            NomeCurso = pc2.ccadeira.cc2.curso.Nome,
+                            NomeCadeira = pc2.ccadeira.cadeira.Nome_cadeira,
+                            NomeProfessor = professor.Nome
+
+                        })
+                    .Where(x => x.AnoCurso == ano && x.NomeCurso == nome)
+                    .Select(x => new
+                    {
+                        Nome_Curso = x.NomeCurso,
+                        Nome_Cadeira = x.NomeCadeira,
+                        Professores = x.NomeProfessor
+                    })
+                    .ToListAsync();
+            return Ok(result);
+        }
     }
 }

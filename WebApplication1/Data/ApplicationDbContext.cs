@@ -17,9 +17,13 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Curso> Curso { get; set; }
 
+    public DbSet<Curso_Cadeira> Curso_Cadeira { get; set; }
+
     public DbSet<Cadeira> Cadeira { get; set; }
 
     public DbSet<Grau> Grau { get; set; }
+
+    public DbSet<Curso_Instituicao> Curso_Instituicao { get; set; }
 
     public DbSet<Instituicao> Instituicao { get; set; }
 
@@ -30,6 +34,10 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Sala> Sala { get; set; }
 
     public DbSet<Localidade> Localidade { get; set; }
+
+    public DbSet<Professor> Professor { get; set; }
+
+    public DbSet<Professor_Cadeira> Professor_Cadeira { get; set; }
 
     public DbSet<Utilizador> Utilizadador { get; set; }
 

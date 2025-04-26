@@ -93,5 +93,39 @@ namespace WebApplication1.Controllers.API
             return Ok(nome);
         }
 
+        /*
+         * Endpoint destinado à Pesquisa dos Cursos disponíveis por Instituição
+         */
+        [HttpGet("{nomeInstituicao}")]
+        public async Task<IActionResult> SelectInstituicao_Curso(string nomeInstituicao)
+        {
+            var result = _context.Instituicao
+                .Join(_context.Curso_Instituicao,
+                    instituicao => instituicao.Id_instituicao,
+                    cinstituicao => cinstituicao.Id_instituicao,
+                    (instituicao, cinstituicao) => new { instituicao, cinstituicao })
+                .Join(_context.Curso,
+                    ci2 => ci2.cinstituicao.Id_curso,
+                    curso => curso.Id_curso,
+                    (ci2, curso) => new { ci2, curso })
+                .Join(_context.Grau,
+                    cc2 => cc2.curso.Grau,
+                    grau => grau.Id_grau,
+                    (cc2, grau) => new
+                    {
+                        NomeCurso = cc2.curso.Nome,
+                        Grau = grau.Nome_grau,
+                        NomeInstituicao = cc2.ci2.instituicao.Nome_instituicao
+                    })
+                .Where(x => x.NomeInstituicao == nomeInstituicao)
+                .Select(x => new
+                {
+                    Nome_Curso = x.NomeCurso,
+                    Nome_Grau = x.Grau
+                })
+                .ToListAsync();
+
+            return Ok(result);
+        }
     }
 }
