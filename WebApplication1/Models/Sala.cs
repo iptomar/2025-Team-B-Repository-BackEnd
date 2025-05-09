@@ -10,13 +10,13 @@ namespace WebApplication1.Models
 
         [ForeignKey(nameof(Id_localidade))]
         public int Localidade { get; set; }
-        public Localidade Id_localidade { get; set; }
+        public Localidade? Id_localidade { get; set; }
 
         [Required]
         [StringLength(25)]
         public string Nome_sala { get; set; }
 
-        public ICollection<Bloco> FKBloco { get; set; }
+        public ICollection<Bloco>? FKBloco { get; set; }
 
     }
 }
