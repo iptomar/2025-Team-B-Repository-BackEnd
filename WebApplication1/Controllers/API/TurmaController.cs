@@ -25,6 +25,7 @@ namespace WebApplication1.Controllers.API
 
         /*
          * Endpoint de Seleção Genérica das Turmas 
+         * Estado: ✓
          */
         [HttpGet]
         public async Task<IActionResult> Select()
@@ -35,6 +36,7 @@ namespace WebApplication1.Controllers.API
 
         /**
          * Endpoint destinado à Seleção de Turmas segundo o Nome do Curso e respetivo Ano Académico.
+         * Estado: ✓
          * 
          * @param Nome - Nome do Curso
          * @param Ano - Ano Académico do Curso
@@ -69,6 +71,7 @@ namespace WebApplication1.Controllers.API
 
         /**
          * Endpoint destinado à inserção de uma nova turma segundo o Nome do Curso
+         * Estado: ✓
          * 
          * @param Curso - Nome do Curso 
          */
@@ -82,11 +85,11 @@ namespace WebApplication1.Controllers.API
             }
             // Fetch do ID do Curso segundo o Nome fornecido
             var curso = await (from curs in _context.Curso
-                                where curs.Nome == Curso
-                                select new
-                                {
-                                    ID = curs.Id_curso
-                                }).ToListAsync();
+                               where curs.Nome == Curso
+                               select new
+                               {
+                                   ID = curs.Id_curso
+                               }).ToListAsync();
             // Caso em que não foi encontrado o ID do Curso segundo o parâmetro recebido
             if (curso == null || !curso.Any())
             {
@@ -100,26 +103,75 @@ namespace WebApplication1.Controllers.API
         }
 
         /**
-         * Endpoint de Edição Genérica das Turmas
+         * Endpoint de Edição das Turmas
+         * Estado: ✘
+         * Nota: Este não é possível devido ao facto que três dos atributos pertencem à PK e um é FK.
          */
-        [HttpPut]
-        public async Task<IActionResult> Edit([FromBody] Turma turma)
+        [HttpPut("{Letra_turma}/{Ano_academico}/{Semestre}/{Curso}")]
+        public async Task<IActionResult> Edit([FromBody] Turma turma, string Letra_turma, int Ano_academico, int Semestre, int Curso)
         {
-            _context.Turma.Update(turma);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Verificação se o modelo fornecido é válido 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Verificação se a Turma existe na BD 
+            var turmaCheck = await _context.Turma.FirstOrDefaultAsync(turm =>
+               turm.Letra_turma == Letra_turma &&
+               turm.Ano_academico == Ano_academico &&
+               turm.Semestre == Semestre &&
+               turm.Curso == Curso
+            );
+            // Caso em que foi encontrada a Turma correspondente
+            if (turmaCheck != null)
+            {
+                _context.Entry(turmaCheck).CurrentValues.SetValues(turma);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrada a Turma correspondente
+            return NotFound("Nenhuma turma encontrada para os critérios informados.");
         }
 
         /**
-         * Endpoint de Apagamento Génerico das Turmas
+         * Endpoint de Apagamento de Turmas
+         * Estado: ✓
          */
-        [HttpDelete]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("{Curso}")]
+        public async Task<IActionResult> Delete([FromBody] Turma turma, string Curso)
         {
-            Turma turma = await _context.Turma.FindAsync(id);
-            _context.Turma.Remove(turma);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Verificação se o modelo fornecido é válido 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Fetch do ID do Curso segundo o Nome fornecido
+            var curso = await (from curs in _context.Curso
+                               where curs.Nome == Curso
+                               select new
+                               {
+                                   ID = curs.Id_curso
+                               }).FirstOrDefaultAsync();
+            // Definição do ID do Curso da Turma
+            turma.Curso = curso.ID;
+            // Verificação se a Turma existe na BD 
+            var turmaObj = await _context.Turma.FirstOrDefaultAsync(turm =>
+               turm.Letra_turma == turma.Letra_turma &&
+               turm.Ano_academico == turma.Ano_academico &&
+               turm.Semestre == turma.Semestre &&
+               turm.Curso == turma.Curso
+            );
+            // Deattach do rastreio de turmaObj
+            _context.Entry(turmaObj).State = EntityState.Detached;
+            // Caso em que foi encontrada a Turma correspondente
+            if (turmaObj != null)
+            {
+                _context.Turma.Remove(turma);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrada a Turma correspondente
+            return NotFound("Nenhuma turma encontrada para os critérios informados.");
         }
     }
 }
