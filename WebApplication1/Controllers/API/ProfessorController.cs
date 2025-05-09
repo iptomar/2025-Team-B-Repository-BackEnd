@@ -74,5 +74,47 @@ namespace WebApplication1.Controllers.API
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        /// <summary>
+        /// Endpoint para listar o horário do professor
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{nome}/{ano}")]
+        public async Task<IActionResult> SelectProfessor_Horario(string nome, string ano)
+        {
+            var result = await _context.Professor
+                    .Join(_context.Professor_Cadeira,
+                        p => p.Id_professor,
+                        pc => pc.Id_professor,
+                        (p, pc) => new { p, pc})
+                    .Join(_context.Cadeira,
+                        pc2 => pc2.pc.Id_cadeira,
+                        c => c.Id_cadeira,
+                        (pc2, c) => new {pc2, c})
+                    .Join(_context.Curso_Cadeira,
+                        c2 => c2.c.Id_cadeira,
+                        cc => cc.Id_cadeira,
+                        (c2, cc) => new {c2, cc})
+                    .Join(_context.Curso,
+                        cc2 => cc2.cc.Id_curso,
+                        crs => crs.Id_curso,
+                        (cc2, crs) => new {cc2, crs})
+                    .Join(_context.Horario,
+                        crs2 => crs2.crs.Id_curso,
+                        h => h.Curso,
+                        (crs2, h) => new
+                        {
+                            nomeProfessor = crs2.cc2.c2.pc2.p.Nome,
+                            anoLetivo = crs2.crs.Ano,
+                            horarioLetivo = h.Id_horario
+                        })
+                    .Where(x => x.nomeProfessor.ToLower() == nome.ToLower() && x.anoLetivo == ano)
+                    .Select(x => new
+                    {
+                        horarioProfessor = x.horarioLetivo
+                    })
+                    .ToListAsync();
+            return Ok(result);
+        }
     }
 }

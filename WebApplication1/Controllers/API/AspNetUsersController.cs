@@ -74,5 +74,39 @@ namespace WebApplication1.Controllers.API
 
             return Ok(nome);
         }
+
+        /// <summary>
+        /// Endpoint que Lista de Utilizadores da aplicação 
+        /// (Recebe-se o utilizador atual para devolver todos exceto ele próprio)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Lista_Utilizador")]
+        public async Task<IActionResult> ListaUtilizadores()
+        {
+            var username = User.Identity?.Name;
+
+            if (username == null)
+            {
+                return Unauthorized();
+            }
+
+            // Obter ID do utilizador atual
+            var userAtual = await _context.Users
+                                .Where(u => u.UserName == username)
+                                .Select(u => u.Id)
+                                .FirstOrDefaultAsync();
+
+            // Listar todos os utilizadores exceto o atual
+            var result = await _context.Users
+                                .Where(u => u.Id != userAtual)
+                                .Select(u => new
+                                {
+                                    Nome_Utilizador = u.UserName,
+                                    Email_Utilizador = u.Email
+                                })
+                                .ToListAsync();
+            return Ok(result);
+        }
+
     }
 }

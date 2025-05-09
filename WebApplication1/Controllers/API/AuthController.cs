@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -67,6 +68,29 @@ namespace WebApplication1.Controllers.API
             var token = GenerateJwtToken(user);
             return Ok(new { token });
         }
+
+        /// <summary>
+        /// Endpoint para receber o JWT Token e decifrar (Devolver o ID do utilizador) 
+        /// </summary>
+        /// <returns></returns>
+        //[Authorize]
+        [HttpGet("get-user-id")]
+        public IActionResult GetUserIdFromToken()
+        {
+            // Verifica se está autenticado
+            if (!User.Identity.IsAuthenticated)
+                return Unauthorized("Token inválido ou expirado.");
+
+            // Tenta obter o ID do utilizador do claim "sub"
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+                      ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return BadRequest("O token não contém o ID do utilizador.");
+
+            return Ok(new { UserId = userId });
+        }
+
 
         private string GenerateJwtToken(IdentityUser user)
         {

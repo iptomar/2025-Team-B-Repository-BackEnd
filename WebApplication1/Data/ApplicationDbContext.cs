@@ -15,6 +15,8 @@ public class ApplicationDbContext : IdentityDbContext
             base.OnModelCreating(builder);
         }
 
+    public DbSet<Horario> Horario { get; set; }
+
     public DbSet<Curso> Curso { get; set; }
 
     public DbSet<Curso_Cadeira> Curso_Cadeira { get; set; }
