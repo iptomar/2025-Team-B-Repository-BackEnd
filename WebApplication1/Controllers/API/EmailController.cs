@@ -94,7 +94,7 @@ public class EmailController : Controller
         }
         return Ok("Email enviado com sucesso!");
     }
-
+    [HttpPost]
     public IActionResult ContaBloqueada([FromBody] EmailCredentialsDTO email)
     {
         const int port = 587;
@@ -130,6 +130,7 @@ public class EmailController : Controller
         return Ok("Email enviado com sucesso!");
     }
     
+    [HttpPost]
     public IActionResult Welcome([FromBody] EmailCredentialsDTO email)
     {
         const int port = 587;
