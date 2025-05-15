@@ -60,12 +60,12 @@ namespace WebApplication1.Controllers.API
                                      Ano = turm.Ano_academico,
                                      Semestre = turm.Semestre
                                  }).ToListAsync();
-            // Caso em que não foi encontrada nenhuma turma segundo os parâmetros recebidos
+            // Caso em que não foi encontrada nenhuma Turma segundo os parâmetros recebidos
             if (registo == null || !registo.Any())
             {
-                return NotFound("Nenhuma turma encontrada para os critérios informados.");
+                return NotFound("Nenhuma turma encontrada para os critérios fornecidos.");
             }
-            // Caso em que foi encontrada pelo menos uma turma segundo os parâmetros recebidos 
+            // Caso em que foi encontrada pelo menos uma Turma segundo os parâmetros recebidos 
             return Ok(registo);
         }
 
@@ -83,20 +83,20 @@ namespace WebApplication1.Controllers.API
             {
                 return BadRequest(ModelState);
             }
-            // Fetch do ID do Curso segundo o Nome fornecido
-            var curso = await (from curs in _context.Curso
+            // Pesquisa do ID do Curso segundo o Nome fornecido
+            var registo = await (from curs in _context.Curso
                                where curs.Nome == Curso
                                select new
                                {
                                    ID = curs.Id_curso
                                }).ToListAsync();
             // Caso em que não foi encontrado o ID do Curso segundo o parâmetro recebido
-            if (curso == null || !curso.Any())
+            if (registo == null || !registo.Any())
             {
-                return NotFound("Nenhum curso encontrado para o critério fornecido");
+                return NotFound("Nenhum registo encontrado para o critério fornecido");
             }
             // Caso em que foi encontrado o Curso correspondente
-            turma.Curso = curso.First().ID;
+            turma.Curso = registo.First().ID;
             await _context.Turma.AddAsync(turma);
             await _context.SaveChangesAsync();
             return CreatedAtAction("Get", new { id = turma.Curso }, turma);
@@ -130,7 +130,7 @@ namespace WebApplication1.Controllers.API
                 return NoContent();
             }
             // Caso em que não foi encontrada a Turma correspondente
-            return NotFound("Nenhuma turma encontrada para os critérios informados.");
+            return NotFound("Nenhuma turma encontrada para os critérios fornecidos.");
         }
 
         /**
@@ -145,15 +145,15 @@ namespace WebApplication1.Controllers.API
             {
                 return BadRequest(ModelState);
             }
-            // Fetch do ID do Curso segundo o Nome fornecido
-            var curso = await (from curs in _context.Curso
+            // Pesquisa do ID do Curso segundo o Nome fornecido
+            var registo = await (from curs in _context.Curso
                                where curs.Nome == Curso
                                select new
                                {
-                                   ID = curs.Id_curso
+                                   Id_curso = curs.Id_curso
                                }).FirstOrDefaultAsync();
             // Definição do ID do Curso da Turma
-            turma.Curso = curso.ID;
+            turma.Curso = registo.Id_curso;
             // Verificação se a Turma existe na BD 
             var turmaObj = await _context.Turma.FirstOrDefaultAsync(turm =>
                turm.Letra_turma == turma.Letra_turma &&
@@ -161,7 +161,7 @@ namespace WebApplication1.Controllers.API
                turm.Semestre == turma.Semestre &&
                turm.Curso == turma.Curso
             );
-            // Deattach do rastreio de turmaObj
+            // De-attach do rastreio de turmaObj
             _context.Entry(turmaObj).State = EntityState.Detached;
             // Caso em que foi encontrada a Turma correspondente
             if (turmaObj != null)

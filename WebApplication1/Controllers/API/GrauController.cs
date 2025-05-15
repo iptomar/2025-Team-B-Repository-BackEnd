@@ -10,16 +10,23 @@ namespace WebApplication1.Controllers.API
     [ApiController]
     public class GrauController : ControllerBase
     {
+        // Referência à BD
         private readonly ApplicationDbContext _context;
 
+        /*
+        * Construtor Parametrizado
+        * 
+        * @param context - Contexto da BD
+        */
         public GrauController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        /**
-        * Endpoint da Lista de Graus
-        */
+        /*
+         * Endpoint de Seleção Genérica das Graus
+         * Estado: ✓
+         */
         [HttpGet]
         public async Task<IActionResult> Select()
         {
@@ -28,70 +35,126 @@ namespace WebApplication1.Controllers.API
         }
 
         /**
-        * Endpoint de pesquisa de um curso
-        * @param Nome - Nome do Curso
-        */
+         * Endpoint destinado à Seleção de Graus segundo o seu Nome
+         * Estado: ✓
+         * 
+         * @param Nome - Nome do Grau
+         */
         [HttpGet("{Nome}")]
-        public async Task<IActionResult> Select_Ind(string Nome)
+        public async Task<IActionResult> Select_Grau(string Nome)
         {
-            Grau registo = await _context.Grau.FindAsync(Nome);
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Pesquisa do Grau segundo o Nome 
+            var registo = await (from grau in _context.Grau
+                                 where grau.Nome_grau == Nome
+                                 select new
+                                 {
+                                     Id = grau.Id_grau,
+                                     Grau = grau.Nome_grau
+                                 }).FirstOrDefaultAsync();
+            // Caso em que não foi encontrada nenhum Grau segundo os parâmetros recebidos
+            if (registo == null)
+            {
+                return NotFound("Nenhum grau encontrado para o critério fornecido.");
+            }
+            // Caso em que foi encontrado pelo menos um Grau segundo os parâmetros recebidos 
             return Ok(registo);
         }
 
         /**
-        * Endpoint para inserir um grau
+        * Endpoint de Inserção de Graus
+        * Estado: ✘
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
-        [HttpPost("grau")]
+        [HttpPost]
         public async Task<IActionResult> Insert([FromBody] Grau grau)
         {
-            //if (!ModelState.IsValid) { return BadRequest(ModelState); }
-            await _context.Grau.AddAsync(grau);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { id = grau.Id_grau }, grau);
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Verificação se o Grau a ser inserido já existe
+            var registo = await (from gra in _context.Grau
+                                 where gra.Nome_grau == grau.Nome_grau
+                                 select new
+                                 {
+                                     Id = gra.Id_grau
+                                 }).FirstOrDefaultAsync();
+            // Caso em que não foi encontrado nenhum Grau com o mesmo nome
+            if(registo == null)
+            {
+                await _context.Grau.AddAsync(grau);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("Get", new { id = grau.Id_grau }, grau);
+            }
+            // Caso em que foi encontrado pelo menos um Grau com o mesmo nome
+            return NotFound("O Grau que deseja inserir já se encontra na BD.");
         }
 
         /**
-        * Endpoint para atualizar um grau
-        * @param Id - Id do Grau
+        * Endpoint para Atualizar os Graus
+        * Estado: ✘
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(string id, [FromBody] Grau grau)
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromBody] Grau grau)
         {
-            _context.Grau.Update(grau);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Pesquisa do Grau pelo seu ID 
+            var registo = await (from gr in _context.Grau
+                                 where gr.Id_grau == grau.Id_grau
+                                 select new
+                                 {
+                                     Id_grau = gr.Id_grau
+                                 }).FirstOrDefaultAsync();
+            // Caso em que foi encontrado o grau definido
+            if (registo != null)
+            {
+                _context.Grau.Update(grau);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrado o grau definido
+            return NotFound("O grau que especificou não existe na BD.");
         }
 
         /**
-        * Endpoint para eliminar um grau
-        * @param Id - Id do Grau
-        */
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+         * Endpoint de Apagamento dos Graus
+         * Estado: ?
+         * 
+         * @param Nome_grau - Nome do Grau
+         */
+        [HttpDelete("{Nome_grau}")]
+        public async Task<IActionResult> Delete(string Nome_grau)
         {
-            Grau registo = await _context.Grau.FindAsync(id);
-            _context.Grau.Remove(registo);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-        /**
-        * Endpoint destinado à Selecao do Nome do Grau
-        */
-        [HttpGet("SelectNomeGrau")]
-        public async Task<IActionResult> SelectNomeGrau()
-        {
-            /**
-             * Funcionamento:
-             *  - Seleciona o nome do grau
-             *  - Através da Tabela Grau
-             */
-            var nome = _context.Grau.
-                Select(g => g.Nome_grau)
-                .ToListAsync();
-
-            return Ok(nome);
+            // Pesquisa do Grau pelo seu Nome 
+            var registo = await (from gr in _context.Grau
+                                 where gr.Nome_grau == Nome_grau
+                                 select new
+                                 {
+                                     Id_grau = gr.Id_grau
+                                 }).FirstOrDefaultAsync();
+            // Caso em que foi encontrado o Grau definido
+            if (registo != null)
+            {
+                // Encontra o Grau pelo o seu Nome
+                Grau grau = await _context.Grau.FindAsync(registo.Id_grau);
+                // Apaga o mesmo e salva as alterações na BD
+                _context.Grau.Remove(grau);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrado o grau definido
+            return NotFound("O grau que especificou não existe na BD.");
         }
     }
-
 }

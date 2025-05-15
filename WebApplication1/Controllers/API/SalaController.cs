@@ -55,12 +55,12 @@ namespace WebApplication1.Controllers.API
                                  {
                                      Sala = sala.Nome_sala
                                  }).ToListAsync();
-            // Caso em que não foi encontrada nenhuma sala segundo os parâmetros recebidos
+            // Caso em que não foi encontrada nenhuma Sala segundo os parâmetros recebidos
             if (registo == null || !registo.Any())
             {
                 return NotFound("Nenhuma sala encontrada para o critério fornecido.");
             }
-            // Caso em que foi encontrada pelo menos uma turma segundo os parâmetros recebidos 
+            // Caso em que foi encontrada pelo menos uma Sala segundo os parâmetros recebidos 
             return Ok(registo);
         }
 
@@ -78,23 +78,23 @@ namespace WebApplication1.Controllers.API
             {
                 return BadRequest(ModelState);
             }
-            // Encontro do ID da Localidade 
-            var localObj = await (from local in _context.Localidade
+            // Pesquisa do ID da Localidade
+            var registo = await (from local in _context.Localidade
                                   where local.Nome_localidade == Localidade
                                   select new
                                   {
                                       Id_Localidade = local.Id_localidade
                                   }).FirstOrDefaultAsync();
-            // Caso em que foi encontrada a localidade definida
-            if (localObj != null)
+            // Caso em que foi encontrada a Sala definida
+            if (registo != null)
             {
-                sala.Localidade = localObj.Id_Localidade;
+                sala.Localidade = registo.Id_Localidade;
                 await _context.Sala.AddAsync(sala);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction("Get", new { id = sala.Id_sala }, sala);
             }
-            // Caso em que não foi encontrada a localidade definida
-            return NotFound("A localidade que especificou não existe na BD.");
+            // Caso em que não foi encontrada a Sala definida
+            return NotFound("A sala que especificou não existe na BD.");
         }
 
         /**
@@ -113,28 +113,29 @@ namespace WebApplication1.Controllers.API
                 return BadRequest(ModelState);
             }
             // Pesquisa do ID da Localidade 
-            var salaObj = await (from local in _context.Localidade
+            var registo = await (from local in _context.Localidade
                                  join sal in _context.Sala on local.Id_localidade equals sal.Localidade
                                  where local.Nome_localidade == Localidade
                                  select new
                                  {
-                                     Id_Localidade = local.Id_localidade
+                                     Id_localidade = local.Id_localidade
                                  }).FirstOrDefaultAsync();
-            // Caso em que foi encontrada a localidade definida
-            if (salaObj != null)
+            // Caso em que foi encontrada a Sala definida
+            if (registo != null)
             {
                 sala.Nome_sala = Nome_Sala;
-                sala.Localidade = salaObj.Id_Localidade;
+                sala.Localidade = registo.Id_localidade;
                 _context.Sala.Update(sala);
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
-            // Caso em que não foi encontrada a localidade definida
-            return NotFound("A localidade que especificou não existe na BD.");
+            // Caso em que não foi encontrada a Sala definida
+            return NotFound("A sala que especificou não existe na BD.");
         }
 
         /**
          * Endpoint de Apagamento das Salas
+         * Estado: ✓
          * 
          * @param Nome_Sala - Nome da Sala
          */
@@ -147,25 +148,24 @@ namespace WebApplication1.Controllers.API
                 return BadRequest(ModelState);
             }
             // Pesquisa do ID da Sala 
-            var salaObj = await (from sal in _context.Sala
+            var registo = await (from sal in _context.Sala
                                  where sal.Nome_sala == Nome_sala
                                  select new
                                  {
-                                     Id_Localidade = sal.Id_sala
+                                     Id_sala = sal.Id_sala
                                  }).FirstOrDefaultAsync();
-            // Caso em que foi encontrada a sala a apagar
-            if (salaObj != null)
+            // Caso em que foi encontrada a Sala a apagar
+            if (registo != null)
             {
-                // Encontra a sala pelo o seu nome
-                Sala sala = await _context.Sala.FindAsync(salaObj.Id_Localidade);
+                // Encontra a Sala pelo o seu ID
+                Sala sala = await _context.Sala.FindAsync(registo.Id_sala);
                 // Apaga a mesma e salva as alterações na BD
                 _context.Sala.Remove(sala);
                 await _context.SaveChangesAsync();
                 return NoContent();
             }
-            // Caso em que não foi encontrada a sala a apagar
-            return NotFound("A localidade que especificou não existe na BD.");
+            // Caso em que não foi encontrada a Sala a apagar
+            return NotFound("A sala que especificou não existe na BD.");
         }
-
     }
 }
