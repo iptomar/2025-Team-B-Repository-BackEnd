@@ -75,8 +75,8 @@ namespace WebApplication1.Controllers.API
 
         /**
         * Endpoint de Inserção de Horários
-        * Estado: ?
-        * Nota: Tenho dúvidas relativamente à sua implementação
+        * Estado: ✘
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody] Horario horario)
@@ -106,7 +106,8 @@ namespace WebApplication1.Controllers.API
 
         /**
         * Endpoint para Atualizar os Horários
-        * Estado: ?
+        * Estado: ✘
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
         [HttpPut]
         public async Task<IActionResult> Edit([FromBody] Horario horario)
@@ -136,7 +137,8 @@ namespace WebApplication1.Controllers.API
 
         /**
          * Endpoint de Apagamento dos Horários
-         * Estado: ?
+         * Estado: ✘
+         * Nota: Este vai funcionar mas pode apagar mais do que uma não existe grau de diferenciação nas turmas. 
          * 
          * @param Nome - Nome do Curso
          * @param Nome_grau - Nome do Grau

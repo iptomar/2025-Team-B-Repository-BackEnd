@@ -19,6 +19,7 @@ namespace WebApplication1.Controllers.API
 
         /**
         * Endpoint da Lista de Professores
+        * Estado: ✓
         */
         [HttpGet]
         public async Task<IActionResult> Select()
@@ -29,56 +30,134 @@ namespace WebApplication1.Controllers.API
 
         /**
         * Endpoint para pesquisar um professor
+        * Estado: ✓
+        * 
         * @param Nome - Nome do Professor
         */
         [HttpGet("{Nome}")]
-        public async Task<IActionResult> Select_Ind(string Nome)
+        public async Task<IActionResult> Select_Prof(string Nome)
         {
-            Professor registo = await _context.Professor.FindAsync(Nome);
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Pesquisa do Professor segundo o Nome 
+            var registo = await (from prof in _context.Professor
+                                 where prof.Nome == Nome
+                                 select new
+                                 {
+                                     Id = prof.Id_professor,
+                                     Grau = prof.Nome
+                                 }).FirstOrDefaultAsync();
+            // Caso em que não foi encontrada nenhum Professor segundo os parâmetros recebidos
+            if (registo == null)
+            {
+                return NotFound("Nenhum professor encontrado para o critério fornecido.");
+            }
+            // Caso em que foi encontrado pelo menos um Professor segundo os parâmetros recebidos 
             return Ok(registo);
         }
 
         /**
         * Endpoint para inserir um professor
+        * Estado: ✘
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
         [HttpPost("professor")]
         public async Task<IActionResult> Insert([FromBody] Professor professor)
         {
-            //if (!ModelState.IsValid) { return BadRequest(ModelState); }
-            await _context.Professor.AddAsync(professor);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { id = professor.Id_professor }, professor);
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Verificação se o Professor a ser inserido já existe
+            var registo = await (from prof in _context.Professor
+                                 where prof.Nome == professor.Nome
+                                 select new
+                                 {
+                                     Id = prof.Id_professor
+                                 }).FirstOrDefaultAsync();
+            // Caso em que não foi encontrado nenhum Professor com o mesmo nome
+            if (registo == null)
+            {
+                await _context.Professor.AddAsync(professor);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("Get", new { id = professor.Id_professor }, professor);
+            }
+            // Caso em que foi encontrado pelo menos um Professor com o mesmo nome
+            return NotFound("O Professor que deseja inserir já se encontra na BD.");
         }
 
         /**
         * Endpoint para atualizar um professor
-        * @param Id - Id do Professor
+        * Estado: ✘
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(string id, [FromBody] Professor professor)
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromBody] Professor professor)
         {
-            _context.Professor.Update(professor);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Pesquisa do Professor pelo seu ID 
+            var registo = await (from prof in _context.Professor
+                                 where prof.Id_professor == professor.Id_professor
+                                 select new
+                                 {
+                                     Id_professor = prof.Id_professor
+                                 }).FirstOrDefaultAsync();
+            // Caso em que foi encontrado o professor definido
+            if (registo != null)
+            {
+                _context.Professor.Update(professor);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrado o grau definido
+            return NotFound("O professor que especificou não existe na BD.");
         }
 
         /**
         * Endpoint para eliminar um professor
+        * Estado: ✓
+        * 
         * @param Id - Id do Professor
         */
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete("{Nome}")]
+        public async Task<IActionResult> Delete(string Nome)
         {
-            Professor registo = await _context.Professor.FindAsync(id);
-            _context.Professor.Remove(registo);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Pesquisa do Professor pelo seu Nome 
+            var registo = await (from prof in _context.Professor
+                                 where prof.Nome == Nome
+                                 select new
+                                 {
+                                     Id_professor = prof.Id_professor
+                                 }).FirstOrDefaultAsync();
+            // Caso em que foi encontrado o Professor definido
+            if (registo != null)
+            {
+                // Encontra o Professor pelo o seu Nome
+                Professor prof = await _context.Professor.FindAsync(registo.Id_professor);
+                // Apaga o mesmo e salva as alterações na BD
+                _context.Professor.Remove(prof);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrado o Professor definido
+            return NotFound("O professor que especificou não existe na BD.");
         }
 
-        /// <summary>
-        /// Endpoint para listar o horário do professor
-        /// </summary>
-        /// <returns></returns>
+        /**
+        * Endpoint para listar o horário do professor
+        * Estado: ?
+        * Nota: Funciona mas não possui dados para testagem.
+        * 
+        * @param nome - Nome do Professor, ano - Ano Letivo do Curso
+        */
         [HttpGet("{nome}/{ano}")]
         public async Task<IActionResult> SelectProfessor_Horario(string nome, string ano)
         {
