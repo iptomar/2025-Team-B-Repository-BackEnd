@@ -129,7 +129,7 @@ namespace WebApplication1.Controllers.API
 
         /**
          * Endpoint de Apagamento dos Graus
-         * Estado: ?
+         * Estado: ✓
          * 
          * @param Nome_grau - Nome do Grau
          */
