@@ -11,6 +11,6 @@ namespace WebApplication1.Models
         [StringLength(125)]
         public string Nome { get; set; }
 
-        public ICollection<Professor_Cadeira> FKProfessor_Cadeira { get; set; }
+        public ICollection<Professor_Cadeira> FKProfessor_Cadeira { get; set; } = new List<Professor_Cadeira>();
     }
 }

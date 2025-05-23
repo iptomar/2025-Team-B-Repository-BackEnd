@@ -18,8 +18,8 @@ namespace WebApplication1.Models
         [Required]
         public DateOnly Data_fim { get; set; }
 
-        public ICollection<Registo> FKRegisto { get; set; }
+        public ICollection<Registo> FKRegisto { get; set; } = new List<Registo>();
 
-        public ICollection<Bloco_Horario> FKBlocoHorario { get; set;}
+        public ICollection<Bloco_Horario> FKBlocoHorario { get; set;} = new List<Bloco_Horario>();
     }
 }

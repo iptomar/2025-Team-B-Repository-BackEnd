@@ -22,8 +22,8 @@ namespace WebApplication1.Models
         public int Grau { get; set; }
         public Grau Id_grau { get; set; } 
 
-        public ICollection<Horario> FKHorario { get; set; }   
-        public ICollection<Turma> FKTurma { get; set; }
+        public ICollection<Horario> FKHorario { get; set; } = new List<Horario>();  
+        public ICollection<Turma> FKTurma { get; set; } = new List<Turma>();
         public ICollection<Curso_Cadeira> FKCurso_Cadeira { get; set; }
         public ICollection<Curso_Instituicao> FKCurso_Instituicao { get; set; }
     }

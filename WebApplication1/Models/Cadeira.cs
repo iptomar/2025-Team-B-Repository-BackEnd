@@ -14,7 +14,7 @@ namespace WebApplication1.Models
         [Required]
         public int ECTS { get; set; }
 
-        public ICollection<Aula> FKAula { get; set; }
+        public ICollection<Aula> FKAula { get; set; } = new List<Aula>();
         public ICollection<Professor_Cadeira> FKProfessor_Cadeira { get; set; }
         public ICollection<Curso_Cadeira> FKCurso_Cadeira { get; set; }
     }

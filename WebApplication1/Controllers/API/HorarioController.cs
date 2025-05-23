@@ -89,6 +89,7 @@ namespace WebApplication1.Controllers.API
             // Verificação se o Horário a ser inserido já existe
             var registo = await (from hor in _context.Horario
                                  where hor.Curso == horario.Curso && hor.Data_fim == horario.Data_inicio && hor.Data_fim == horario.Data_fim
+
                                  select new
                                  {
                                      Id_horario = hor.Id_horario
