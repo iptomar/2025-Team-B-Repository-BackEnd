@@ -11,6 +11,6 @@ namespace WebApplication1.Models
         [StringLength(20)]
         public string Nome_tipologia { get; set; }
 
-        public ICollection<Aula> FKAula {  get; set; }
+        public ICollection<Aula> FKAula {  get; set; } = new List<Aula>();
     }
 }

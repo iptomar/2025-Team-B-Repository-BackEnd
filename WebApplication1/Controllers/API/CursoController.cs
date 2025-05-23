@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using System.Runtime.ConstrainedExecution;
 using WebApplication1.Data;
 using WebApplication1.Models;
 
@@ -10,15 +12,22 @@ namespace WebApplication1.Controllers.API
     [ApiController]
     public class CursoController : ControllerBase
     {
+        // Referência à BD
         private readonly ApplicationDbContext _context;
 
+        /*
+        * Construtor Parametrizado
+        * 
+        * @param context - Contexto da BD
+        */
         public CursoController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        /**
-         * Endpoint da Lista de Cursos
+        /*
+         * Endpoint de Seleção Genérica de Cursos
+         * Estado: ✓
          */
         [HttpGet]
         public async Task<IActionResult> Select()
@@ -28,51 +37,132 @@ namespace WebApplication1.Controllers.API
         }
 
         /**
-        * Endpoint de pesquisa de um curso
-        * @param Nome - Nome do Curso
-        */
+         * Endpoint destinado à Seleção de Cursos segundo o seu Nome
+         * Estado: ✓
+         * 
+         * @param Nome - Nome do Curso
+         */
         [HttpGet("{Nome}")]
-        public async Task<IActionResult> Select_Ind(string Nome)
+        public async Task<IActionResult> Select_Cur(string Nome)
         {
-            Curso registo = await _context.Curso.FindAsync(Nome);
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Pesquisa do Curso segundo o seu Nome 
+            var registo = await (from cur in _context.Curso
+                                 join usr in _context.UserManager on cur.Coordenador equals usr.Id
+                                 where cur.Nome == Nome
+                                 select new
+                                 {
+                                     Id_curso = cur.Id_curso,
+                                     Nome = cur.Nome,
+                                     Ano = cur.Ano,
+                                     Coordenador = usr.NormalizedUserName
+                                 }).FirstOrDefaultAsync();
+            // Caso em que não foi encontrada nenhum Curso segundo os parâmetros recebidos
+            if (registo == null)
+            {
+                return NotFound("Nenhum curso encontrado para o critério fornecido.");
+            }
+            // Caso em que foi encontrado pelo menos um Grau segundo os parâmetros recebidos 
             return Ok(registo);
         }
 
         /**
-        * Endpoint para inserir um novo curso
+        * Endpoint de Inserção de Cursos
+        * Estado: ✘ ?
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
         [HttpPost("curso")]
         public async Task<IActionResult> Insert([FromBody] Curso curso)
         {
-            //if (!ModelState.IsValid) { return BadRequest(ModelState); }
-            await _context.Curso.AddAsync(curso);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { id = curso.Id_curso }, curso);
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Verificação se o Curso a ser inserido já existe
+            var registo = await (from cur in _context.Curso
+                                 where cur.Nome == curso.Nome && cur.Ano == curso.Ano && cur.Grau == curso.Grau
+                                 select new
+                                 {
+                                     Id_curso = cur.Id_curso
+                                 }).FirstOrDefaultAsync();
+            // Caso em que não foi encontrado nenhum Curso com o mesmo nome, ano e grau
+            if (registo == null)
+            {
+                await _context.Curso.AddAsync(curso);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("Get", new { id = curso.Id_curso }, curso);
+            }
+            // Caso em que foi encontrado pelo menos um Curso com o mesmo nome, ano e grau
+            return NotFound("O Curso que deseja inserir já se encontra na BD.");
         }
 
         /**
-        * Endpoint para atualizar um curso
-        * @param Id - Id do Curso
+        * Endpoint para Atualizar os Cursos
+        * Estado: ✘ ?
+        * Nota: Este ainda não dá devido a serem necessárias alterações ao Model.
         */
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(string id, [FromBody] Curso curso)
+        [HttpPut]
+        public async Task<IActionResult> Edit([FromBody] Curso curso)
         {
-            _context.Curso.Update(curso);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Verificação se o modelo fornecido é válido
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // Pesquisa do Curso pelo seu ID 
+            var registo = await (from cur in _context.Curso
+                                 where cur.Id_curso == curso.Id_curso
+                                 select new
+                                 {
+                                     Id_curso = cur.Id_curso
+                                 }).FirstOrDefaultAsync();
+            // Caso em que foi encontrado o curso definido
+            if (registo != null)
+            {
+                _context.Curso.Update(curso);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrado o curso definido
+            return NotFound("O curso que especificou não existe na BD.");
         }
 
         /**
-        * Endpoint para eliminar um curso
-        * @param Id - Id do Curso
-        */
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+         * Endpoint de Apagamento dos Cursos
+         * Estado: ?
+         * 
+         * @param Nome - Nome do Curso
+         * @param Ano - Ano do Curso
+         * @param Grau - Nome do Grau
+         */
+        [HttpDelete("{Nome_curso}/{Ano}/{Grau}")]
+        public async Task<IActionResult> Delete(string Nome, string Ano, string Grau)
         {
-            Curso registo = await _context.Curso.FindAsync(id);
-            _context.Curso.Remove(registo);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            // Pesquisa do Curso pelo seu nome, ano e grau
+            var registo = await (from gra in _context.Grau
+                                 join cur in _context.Curso on gra.Id_grau equals cur.Grau
+                                 where cur.Nome == Nome && cur.Ano == Ano && gra.Nome_grau == Grau
+                                 select new
+                                 {
+                                     Id_curso = cur.Id_curso
+                                 }).FirstOrDefaultAsync();
+            // Caso em que foi encontrado o Curso definido
+            if (registo != null)
+            {
+                // Encontra o Curso pelo o seu ID
+                Curso curso = await _context.Curso.FindAsync(registo.Id_curso);
+                // Apaga o mesmo e salva as alterações na BD
+                _context.Curso.Remove(curso);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            // Caso em que não foi encontrado o grau definido
+            return NotFound("O curso que especificou não existe na BD.");
         }
 
         /**

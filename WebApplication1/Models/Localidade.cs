@@ -10,8 +10,7 @@ namespace WebApplication1.Models
         [StringLength(50)]
         public string Nome_localidade { get; set; }
 
-        public ICollection<Sala> FKSala { get; set; }
-
+        public ICollection<Sala> FKSala { get; set; } = new List<Sala>();
     }
 }
 

@@ -38,19 +38,19 @@ namespace WebApplication1.Controllers.API
          * Endpoint destinado à Seleção de Graus segundo o seu Nome
          * Estado: ✓
          * 
-         * @param Nome - Nome do Grau
+         * @param Nome_grau - Nome do Grau
          */
         [HttpGet("{Nome}")]
-        public async Task<IActionResult> Select_Grau(string Nome)
+        public async Task<IActionResult> Select_Gra(string Nome_grau)
         {
             // Verificação se o modelo fornecido é válido
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            // Pesquisa do Grau segundo o Nome 
+            // Pesquisa do Grau segundo o seu Nome 
             var registo = await (from grau in _context.Grau
-                                 where grau.Nome_grau == Nome
+                                 where grau.Nome_grau == Nome_grau
                                  select new
                                  {
                                      Id = grau.Id_grau,
