@@ -12,6 +12,6 @@ namespace WebApplication1.Models
         [StringLength(50)]
         public string Nome_grau { get; set; }
 
-        public ICollection<Curso> Curso { get; set; }
+        public ICollection<Curso> Curso { get; set; } = new List<Curso>();
     }
 }

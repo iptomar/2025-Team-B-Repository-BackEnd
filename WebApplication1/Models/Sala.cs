@@ -16,7 +16,7 @@ namespace WebApplication1.Models
         [StringLength(25)]
         public string Nome_sala { get; set; }
 
-        public ICollection<Bloco>? FKBloco { get; set; }
+        public ICollection<Bloco> FKBloco { get; set; } = new List<Bloco>();
 
     }
 }

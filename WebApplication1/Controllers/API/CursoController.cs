@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System.Runtime.ConstrainedExecution;
 using WebApplication1.Data;
 using WebApplication1.Models;
@@ -139,7 +140,7 @@ namespace WebApplication1.Controllers.API
          * @param Ano - Ano do Curso
          * @param Grau - Nome do Grau
          */
-        [HttpDelete("{Nome_curso/Ano/Grau}")]
+        [HttpDelete("{Nome_curso}/{Ano}/{Grau}")]
         public async Task<IActionResult> Delete(string Nome, string Ano, string Grau)
         {
             // Pesquisa do Curso pelo seu nome, ano e grau
@@ -185,7 +186,7 @@ namespace WebApplication1.Controllers.API
         /**
         * Endpoint destinado à Pesquisa de Professores lecionadores de dado curso
         */
-        [HttpGet("{ano}/ {nome}")]
+        [HttpGet("{ano}/{nome}")]
         public async Task<IActionResult> SelectProfessor_Curso(string ano, string nome)
         {
             var result = await _context.Curso
@@ -265,7 +266,7 @@ namespace WebApplication1.Controllers.API
         /**
         * Endpoint destinado à Pesquisa de Professores lecionadores de dado curso e respetivas cadeiras
         */
-        [HttpGet("{ano}/ {nome}")]
+        [HttpGet("{ano}/{nome}")]
         public async Task<IActionResult> SelectProfessor_Curso_Cadeiras(string ano, string nome)
         {
             var result = await _context.Curso
