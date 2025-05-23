@@ -10,10 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="275dcd1b-0e71-4a0c-983d-6a1dda2ea37b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Controllers/API/EmailController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/DTOs/EmailCredentialsDTO.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/API/SignalRController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.WebApplication1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WebApplication1/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/DTOs/SalaDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/DTOs/SalaDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebApplication1.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/WebApplication1.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +47,7 @@
     ".NET Launch Settings Profile.WebApplication1: http.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/SMTP",
+    "git-widget-placeholder": "feature/signalR",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -123,6 +123,7 @@
       <workItem from="1744198715329" duration="3938000" />
       <workItem from="1744303135489" duration="5028000" />
       <workItem from="1744363661820" duration="3232000" />
+      <workItem from="1747959497172" duration="1894000" />
     </task>
     <servers />
   </component>
