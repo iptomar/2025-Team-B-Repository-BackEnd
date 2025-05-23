@@ -203,5 +203,31 @@ namespace IPT_Teste.Controllers.API
             return Ok();
         }
 
+        // GET: api/Cursos/anoletivo/3
+        [HttpGet("anoletivo/{anoLetivo}")]
+        public async Task<ActionResult<IEnumerable<Cursos>>> GetCursosPorAnoLetivo(int anoLetivo)
+        {
+            return await _context.Cursos
+                .Include(c => c.AnoLetivo)
+                .Include(c => c.Instituicao)
+                .Include(c => c.Grau)
+                .Include(c => c.Professor)
+                .Where(c => c.AnoLetivoFK == anoLetivo)
+                .ToListAsync();
+        }
+
+        // GET: api/Cursos/grau/3
+        [HttpGet("grau/{grauId}")]
+        public async Task<ActionResult<IEnumerable<Cursos>>> GetCursosPorGrau(int grauId)
+        {
+            return await _context.Cursos
+                .Include(c => c.AnoLetivo)
+                .Include(c => c.Instituicao)
+                .Include(c => c.Grau)
+                .Include(c => c.Professor)
+                .Where(c => c.GrauFK == grauId)
+                .ToListAsync();
+        }
+
     }
 }

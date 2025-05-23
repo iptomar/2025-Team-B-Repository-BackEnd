@@ -30,5 +30,8 @@ namespace IPT_Teste.Models
 
         [JsonIgnore]
         public ICollection<Cadeiras> Cadeiras { get; set; } = new List<Cadeiras>();
+
+        [JsonIgnore]
+        public ICollection<Professores> Professores { get; set; } = new List<Professores>();
     }
 }

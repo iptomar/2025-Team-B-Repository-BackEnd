@@ -24,6 +24,8 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Horarios> Horarios { get; set; }
 
+    public DbSet<Professores> Professores { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
