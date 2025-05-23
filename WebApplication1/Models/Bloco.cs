@@ -12,14 +12,10 @@ namespace WebApplication1.Models
         [StringLength(5)]
         public string Hora_inicio { get; set; }
 
-        [Required]
-        [StringLength(5)]
-        public string Hora_fim { get; set; }
-
         [ForeignKey(nameof(Id_sala))]
         public int Sala { get; set; }
         public Sala Id_sala { get; set; }
-
+        
         public ICollection<Bloco_Horario> FKBlocoHorario { get; set; }
     }
 }

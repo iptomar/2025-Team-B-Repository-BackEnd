@@ -46,7 +46,7 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<SignalRController>("/signalr");
+    endpoints.MapHub<BlocoHubController>("/signalr");
 });
 
 app.UseCors(x => x

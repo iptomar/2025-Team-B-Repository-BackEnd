@@ -26,4 +26,8 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Sala> Sala { get; set; }
     
     public DbSet<Localidade> Localidade { get; set; }
+    
+    public DbSet<Tipologia> Tipologia { get; set; }
+    
+    public DbSet<Bloco> Bloco { get; set; }
 }
