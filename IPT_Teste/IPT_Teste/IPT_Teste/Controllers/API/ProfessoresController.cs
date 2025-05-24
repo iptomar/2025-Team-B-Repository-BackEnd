@@ -75,7 +75,7 @@ namespace IPT_Teste.Controllers
             _context.Professores.Add(model);
             await _context.SaveChangesAsync();
 
-            return Ok("Docente associado ao curso com sucesso");
+            return Ok(new { mensagem = "Docente associado ao curso com sucesso" });
         }
 
 
@@ -92,7 +92,7 @@ namespace IPT_Teste.Controllers
             _context.Professores.Remove(association);
             await _context.SaveChangesAsync();
 
-            return Ok("Professor removido do curso com sucesso");
+            return Ok(new { mensagem = "Professor removido do curso com sucesso"});
         }
     }
 }
