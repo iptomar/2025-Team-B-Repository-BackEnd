@@ -1,7 +1,9 @@
 using IPT_Teste.Data;
 using IPT_Teste.Models;
+using IPT_Teste.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1;
 
 
@@ -21,47 +23,59 @@ public class SignalRController: Controller
     }
 
     [HttpPost("bloco")]
-    public async Task<IActionResult>Bloco([FromBody] string salaAula, string tipologiaCadeira, string nomeCadeira, TimeOnly inicio)
+    public async Task<IActionResult>Bloco([FromBody] TurmaDTO turma)
     {
+        /*
+         * id
+         * ano
+         * letra
+         * semestre
+         * curso
+         */
         
-        //partindo do principio que o frontend envia strings como argumentos, fez-se a passagem desses valores para um int (tabela Bloco so aceita esses valores como inteiro (FKs))
-        
-        //sala --> int
-        var s = _context.Salas.  
-            Where(sala => sala.Sala == salaAula).
-            Select(sa => sa.Id). 
-            FirstOrDefault();
-        
-        //tipologia --> int
-        var t = _context.Tipologias. 
-            Where(tipologia => tipologia.Tipologia == tipologiaCadeira ). 
-            Select(ti => ti.Id). 
-            FirstOrDefault();
-        
-        //cadeira --> int
-        var c = _context.Cadeiras. 
-            Where(cadeira => cadeira.Cadeira == nomeCadeira). 
-            Select(ca => ca.Id).
-            FirstOrDefault();
+        /*
+         * horario -> aulas
+         * aulas -> blocos
+         * blocos -> blocoshorarios
+         * blocoshorarios -> horarios
+         */
 
-        var a = _context.Aulas.
-                Where(aula => aula.CadeiraFK == c) . 
-                Select(aa => aa.Id). 
-                FirstOrDefault();
-            ;
-        var bloco = new Blocos
-        {
-            Hora_Inicio = inicio,
-            SalaFK = s,
-            AulaFK = a
-        };
+        //var teste = _context.Blocos.Include(h => h.Horarios).ToList();
         
-        _context.Blocos.Add(bloco);
-        await _context.SaveChangesAsync();
+        
+        var horario =  _context.Aulas. 
+            Where(a => a.Id == turma.Id ). 
+            SelectMany(aula => _context.Blocos. 
+                Where(b => b.AulaFK == aula.Id ). 
+                SelectMany( bloco => _context.Horarios.Include(h => h.Blocos). 
+                    Where(h => h.Blocos == bloco.Horarios). 
+                    Select(horario => horario.Id))
+            ).FirstOrDefault();
+        
+        
+        /*var horario = await _context.Aulas
+            .Where(a => a.TurmaFK == turma.Id)
+            .SelectMany(aula => _context.Blocos
+                .Where(b => b.AulaFK == aula.Id)
+                .SelectMany(bloco => _context.Set<Dictionary<string, object>>("blocoshorarios")
+                    .Where(bh => (int)bh["BlocosId"] == bloco.Id)
+                    .Join(_context.Horarios,
+                        bh => (int)bh["HorariosId"],
+                        h => h.Id,
+                        (bh, horario) => new {
+                            Cadeira = aula.CadeiraFK,
+                            Sala = bloco.SalaFK,
+                            HoraInicio = horario.Inicio,
+                            HoraFim = horario.Fim
+                        }
+                    )
+                )
+            )
+            .ToListAsync();*/
+        
 
-        await _hubContext.Clients.All.SendAsync("ReceiveMessage", bloco);
-
-        return Ok(bloco);
+        await _hubContext.Clients.All.SendAsync("ReceiveMessage", horario);
+        return Ok(horario);
     }
     
     

@@ -9,6 +9,7 @@ public class ApplicationDbContext : IdentityDbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     { }
+    
     public DbSet<Tipologias> Tipologias { get; set; }
     public DbSet<Cadeiras> Cadeiras { get; set; }
     public DbSet<Graus> Graus { get; set; }
