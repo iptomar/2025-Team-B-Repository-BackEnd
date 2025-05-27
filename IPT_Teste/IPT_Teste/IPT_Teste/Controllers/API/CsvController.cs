@@ -95,6 +95,27 @@ public class CsvController : Controller
                     await _context.SaveChangesAsync();
                 }
             }
+            // caso sejam os cursos
+            else if (headers.Contains("curso") && headers.Contains("ano_letivo") && headers.Contains("instituicao") && headers.Contains("grau") && headers.Contains("professor"))
+            {
+                csvPreview.Context.RegisterClassMap<CursosMap>();
+                var cursos = csvPreview.GetRecords<Cursos>().ToList();
+               
+                // Nomes que já existem na DB
+                var nomesExistentes = await _context.Cursos
+                    .Select(l => l.Curso.ToLower()).ToListAsync();
+                // Verificamos se nas cadeiras recebidas existe alguma que já esteja na DB e retiramos
+                var cursosFiltrados = cursos
+                    .Where(l => !nomesExistentes.Contains(l.Curso.ToLower()))
+                    .ToList();
+
+                // caso existam cadeiras novas, vamos adiciona-los...
+                if (cursosFiltrados.Any())
+                {
+                    _context.Cursos.AddRange(cursosFiltrados);
+                    await _context.SaveChangesAsync();
+                }
+            }
             //caso seja os graus
             else if (headers.Contains("grau"))
             {
@@ -156,6 +177,27 @@ public class CsvController : Controller
                 if (tipologiasFiltradas.Any())
                 {
                     _context.Tipologias.AddRange(tipologiasFiltradas);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            // caso sejam as cadeiras
+            else if (headers.Contains("cadeira") && headers.Contains("ano") && headers.Contains("semestre") && headers.Contains("ects"))
+            {
+                csvPreview.Context.RegisterClassMap<CadeirasMap>();
+                var cadeiras = csvPreview.GetRecords<Cadeiras>().ToList();
+               
+                // Nomes que já existem na DB
+                var nomesExistentes = await _context.Cadeiras
+                    .Select(l => l.Cadeira.ToLower()).ToListAsync();
+                // Verificamos se nas cadeiras recebidas existe alguma que já esteja na DB e retiramos
+                var cadeirasFiltradas = cadeiras
+                    .Where(l => !nomesExistentes.Contains(l.Cadeira.ToLower()))
+                    .ToList();
+
+                // caso existam cadeiras novas, vamos adiciona-los...
+                if (cadeirasFiltradas.Any())
+                {
+                    _context.Cadeiras.AddRange(cadeirasFiltradas);
                     await _context.SaveChangesAsync();
                 }
             }
