@@ -92,7 +92,8 @@ public class SignalRController: Controller
 
         horario.Blocos.Add(bloco);
         await _context.SaveChangesAsync();
-
+        
+        await _hubContext.Clients.All.SendAsync("ReceiveMessage", bloco);
         return Ok("Bloco criado e associado ao horário com sucesso.");
     }
     
