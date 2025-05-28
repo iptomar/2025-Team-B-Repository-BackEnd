@@ -23,7 +23,7 @@ public class SignalRController: Controller
     }
 
     [HttpPost("bloco")]
-    public async Task<IActionResult>Bloco([FromBody] TurmaDTO turma)
+    public async Task<IActionResult>Bloco([FromBody] int turmaId)
     {
         /*
          * id
@@ -43,39 +43,57 @@ public class SignalRController: Controller
         //var teste = _context.Blocos.Include(h => h.Horarios).ToList();
         
         
-        var horario =  _context.Aulas. 
-            Where(a => a.Id == turma.Id ). 
-            SelectMany(aula => _context.Blocos. 
-                Where(b => b.AulaFK == aula.Id ). 
-                SelectMany( bloco => _context.Horarios.Include(h => h.Blocos). 
-                    Where(h => h.Blocos == bloco.Horarios). 
-                    Select(horario => horario.Id))
-            ).FirstOrDefault();
-        
-        
-        /*var horario = await _context.Aulas
-            .Where(a => a.TurmaFK == turma.Id)
-            .SelectMany(aula => _context.Blocos
-                .Where(b => b.AulaFK == aula.Id)
-                .SelectMany(bloco => _context.Set<Dictionary<string, object>>("blocoshorarios")
-                    .Where(bh => (int)bh["BlocosId"] == bloco.Id)
-                    .Join(_context.Horarios,
-                        bh => (int)bh["HorariosId"],
-                        h => h.Id,
-                        (bh, horario) => new {
-                            Cadeira = aula.CadeiraFK,
-                            Sala = bloco.SalaFK,
-                            HoraInicio = horario.Inicio,
-                            HoraFim = horario.Fim
-                        }
-                    )
-                )
-            )
-            .ToListAsync();*/
+        var aulas = await _context.Aulas.Where(a => a.TurmaFK == turmaId).ToListAsync();
+
+
+        var aulaIds = aulas.Select(a => a.Id).ToList();
+
+        var blocos = await _context.Blocos
+            .Where(b => aulaIds.Contains(b.AulaFK))
+            .ToListAsync();
+
+        var horarios = await _context.Horarios
+            .Include(h => h.Blocos)
+            .ToListAsync();
+
+        var resultado = await _context.Horarios
+            .Where(h => h.Blocos.Any(b => aulas.Select(a => a.Id).Contains(b.AulaFK)))
+            .Select(h => h.Id)
+            .FirstOrDefaultAsync();
         
 
-        await _hubContext.Clients.All.SendAsync("ReceiveMessage", horario);
-        return Ok(horario);
+        await _hubContext.Clients.All.SendAsync("ReceiveMessage", resultado);
+        return Ok(resultado);
+    }
+    
+    [HttpPost("horariobloco")]
+    public async Task<IActionResult> Horariobloco([FromBody] BlocoDTO dto)
+    {
+        var horario = await _context.Horarios
+            .Include(h => h.Blocos)
+            .FirstOrDefaultAsync(h => h.Id == dto.HorarioId);
+
+        if (horario == null)
+            return NotFound("Horário não encontrado.");
+        
+        var conflito = horario.Blocos.Any(b => b.Hora_Inicio == dto.HoraInicio);
+        if (conflito)
+            return Conflict("Já existe um bloco nessa hora neste horário.");
+
+        var bloco = new Blocos
+        {
+            Hora_Inicio = dto.HoraInicio,
+            SalaFK = dto.SalaFK,
+            AulaFK = dto.AulaFK
+        };
+
+        _context.Blocos.Add(bloco);
+        await _context.SaveChangesAsync(); 
+
+        horario.Blocos.Add(bloco);
+        await _context.SaveChangesAsync();
+
+        return Ok("Bloco criado e associado ao horário com sucesso.");
     }
     
     
