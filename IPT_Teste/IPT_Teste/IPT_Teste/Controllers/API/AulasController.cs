@@ -51,6 +51,25 @@ namespace IPT_Teste.Controllers.API
 
             return Ok(aula);
         }
+        // GET: api/Aulas/5
+        [HttpGet("Turma/{id}")]
+        public async Task<ActionResult<Aulas>> GetAulasPorTurma(int id)
+        {
+            var aula = await _context.Aulas
+                .Include(a => a.Cadeira)
+                .Include(a => a.Tipologia)
+                .Include(a => a.Turma)
+                .Include(a => a.Professor)
+                .Where(a => a.TurmaFK == id)
+                .ToListAsync();
+
+            if (aula == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(aula);
+        }
 
         // POST: api/Aulas
         [HttpPost]
