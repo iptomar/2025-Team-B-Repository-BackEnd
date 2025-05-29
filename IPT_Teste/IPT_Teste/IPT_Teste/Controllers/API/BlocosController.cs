@@ -40,6 +40,26 @@ namespace IPT_Teste.Controllers.API
             return bloco;
         }
 
+
+        // GET: api/Blocos/Turma/5
+        [HttpGet("Turma/{id}")]
+        public async Task<ActionResult<Blocos>> GetBlocoPorTurma(int id)
+        {
+            var blocos = await _context.Blocos
+                .Include(b => b.Sala)
+                .Include(b => b.Aula)
+                .Where(b => b.Aula.TurmaFK == id)
+                .ToListAsync();
+
+            if (blocos == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(blocos);
+
+        }
+
         // POST: api/Blocos
         [HttpPost]
         public async Task<ActionResult<Blocos>> PostBloco(Blocos bloco)
