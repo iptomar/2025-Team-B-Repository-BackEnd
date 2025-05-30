@@ -77,21 +77,27 @@ public class SignalRController: Controller
         if (horario == null)
             return NotFound("Horário não encontrado.");
 
-        var inicio = dto.HoraInicio;
-        
-        var bl = horario.Blocos. 
-            Where(b => b.AulaFK == dto.AulaFK).
-            FirstOrDefault();
-        
+        var sala = _context.Salas.Find(dto.SalaFK);
 
-        var teste2 = (TimeOnly) bl.Aula.Duracao;
-        var duracao_int = teste2.Ticks;
+        if (sala == null)
+        {
+            return NotFound("Não foi encontrada nenhuma sala. :(");
+        }
         
+        var aula = _context.Aulas.Find(dto.AulaFK);
+        if (aula == null)
+        {
+            return NotFound("Não foi encontrada nenhuma aula. :(");
+        }
+        
+        var inicio = dto.HoraInicio;
+        var duracao_int = aula.Duracao.Hour * 60 + aula.Duracao.Minute;
         var fim = inicio.AddMinutes(duracao_int);
 
         foreach (var b in horario.Blocos)
         {
             var inicioexistente = b.Hora_Inicio;
+            var duracaoExistenteMin = b.Aula.Duracao.Hour * 60 + b.Aula.Duracao.Minute;
             var fimexistente = inicioexistente.AddMinutes(duracao_int);
             
             if (inicio < fimexistente && inicioexistente < fim)
@@ -104,11 +110,8 @@ public class SignalRController: Controller
         {
             Hora_Inicio = dto.HoraInicio,
             SalaFK = dto.SalaFK,
-            AulaFK = dto.AulaFK
+            AulaFK = dto.AulaFK,
         };
-
-        _context.Blocos.Add(bloco);
-        await _context.SaveChangesAsync(); 
 
         horario.Blocos.Add(bloco);
         await _context.SaveChangesAsync();
