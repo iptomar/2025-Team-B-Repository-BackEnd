@@ -70,15 +70,35 @@ public class SignalRController: Controller
     public async Task<IActionResult> Horariobloco([FromBody] BlocoDTO dto)
     {
         var horario = await _context.Horarios
-            .Include(h => h.Blocos)
+            .Include(h => h.Blocos). 
+            ThenInclude(b => b.Aula)
             .FirstOrDefaultAsync(h => h.Id == dto.HorarioId);
 
         if (horario == null)
             return NotFound("Horário não encontrado.");
+
+        var inicio = dto.HoraInicio;
         
-        var conflito = horario.Blocos.Any(b => b.Hora_Inicio == dto.HoraInicio);
-        if (conflito)
-            return Conflict("Já existe um bloco nessa hora neste horário.");
+        var bl = horario.Blocos. 
+            Where(b => b.AulaFK == dto.AulaFK).
+            FirstOrDefault();
+        
+
+        var teste2 = (TimeOnly) bl.Aula.Duracao;
+        var duracao_int = teste2.Ticks;
+        
+        var fim = inicio.AddMinutes(duracao_int);
+
+        foreach (var b in horario.Blocos)
+        {
+            var inicioexistente = b.Hora_Inicio;
+            var fimexistente = inicioexistente.AddMinutes(duracao_int);
+            
+            if (inicio < fimexistente && inicioexistente < fim)
+            {
+                return Conflict("A aula colide com outro bloco existente.");
+            }
+        }
 
         var bloco = new Blocos
         {

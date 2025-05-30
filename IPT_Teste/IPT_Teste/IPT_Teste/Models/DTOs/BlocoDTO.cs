@@ -4,6 +4,7 @@ public class BlocoDTO
 {
     public int HorarioId { get; set; }
     public TimeOnly HoraInicio { get; set; }
+    
     public int SalaFK { get; set; }
     public int AulaFK { get; set; }
 }
