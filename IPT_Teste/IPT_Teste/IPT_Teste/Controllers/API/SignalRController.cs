@@ -105,6 +105,8 @@ public class SignalRController: Controller
                 return Conflict("A aula colide com outro bloco existente.");
             }
         }
+        
+        
 
         var bloco = new Blocos
         {
@@ -115,6 +117,13 @@ public class SignalRController: Controller
 
         horario.Blocos.Add(bloco);
         await _context.SaveChangesAsync();
+        
+        await _hubContext.Clients.Group($"horario_{dto.HorarioId}")
+            .SendAsync("NovoBlocoCriado",new
+        {
+            bloco
+        }); 
+        
 
         return Ok("Bloco criado e associado ao horário com sucesso.");
     }

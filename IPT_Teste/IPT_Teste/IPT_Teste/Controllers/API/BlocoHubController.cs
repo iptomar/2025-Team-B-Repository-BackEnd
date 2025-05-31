@@ -11,4 +11,9 @@ public class BlocoHubController : Hub
     {
         await Clients.All.SendAsync("ReceiveMessage", info);
     }
+    
+    public async Task JoinHorarioGroup(int horarioId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"horario_{horarioId}");
+    }
 }
