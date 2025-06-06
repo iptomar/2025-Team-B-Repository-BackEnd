@@ -80,8 +80,8 @@ namespace IPT_Teste.Migrations
                     b.Property<int>("CadeiraFK")
                         .HasColumnType("int");
 
-                    b.Property<int>("Duracao")
-                        .HasColumnType("int");
+                    b.Property<TimeOnly>("Duracao")
+                        .HasColumnType("time");
 
                     b.Property<string>("ProfessorFK")
                         .IsRequired()
@@ -115,6 +115,9 @@ namespace IPT_Teste.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AulaFK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiaDaSemana")
                         .HasColumnType("int");
 
                     b.Property<TimeOnly>("Hora_Inicio")

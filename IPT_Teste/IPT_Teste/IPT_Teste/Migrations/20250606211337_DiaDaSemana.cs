@@ -5,25 +5,25 @@
 namespace IPT_Teste.Migrations
 {
     /// <inheritdoc />
-    public partial class oi : Migration
+    public partial class DiaDaSemana : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "DiaSemana",
-                table: "Aulas");
+            migrationBuilder.AddColumn<int>(
+                name: "DiaDaSemana",
+                table: "Blocos",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "DiaSemana",
-                table: "Aulas",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+            migrationBuilder.DropColumn(
+                name: "DiaDaSemana",
+                table: "Blocos");
         }
     }
 }
