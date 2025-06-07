@@ -120,10 +120,7 @@ public class SignalRController: Controller
         await _context.SaveChangesAsync();
         
         await _hubContext.Clients.Group($"horario_{dto.HorarioId}")
-            .SendAsync("NovoBlocoCriado",new
-        {
-            bloco
-        }); 
+            .SendAsync("NovoBlocoCriado",dto); 
         
 
         return Ok("Bloco criado e associado ao horário com sucesso.");
