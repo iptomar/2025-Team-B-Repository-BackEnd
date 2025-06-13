@@ -16,4 +16,9 @@ public class BlocoHubController : Hub
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, $"horario_{horarioId}");
     }
+    
+    public async Task LeaveHorarioGroup(int horarioId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Horario_{horarioId}");
+    }
 }
