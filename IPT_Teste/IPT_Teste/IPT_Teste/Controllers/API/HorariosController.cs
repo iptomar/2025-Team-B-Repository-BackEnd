@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using IPT_Teste.Models;
 using IPT_Teste.Data;
+using IPT_Teste.Models.DTOs;
 
 namespace IPT_Teste.Controllers.API
 {
@@ -38,6 +39,24 @@ namespace IPT_Teste.Controllers.API
             }
 
             return Ok(horario);
+        }
+
+        [HttpPost("horarios-turma")]
+        public async Task<ActionResult> GetHorarioTurma([FromBody] int id)
+        {
+            var turmaExiste = await _context.Turmas.AnyAsync(t => t.Id == id);
+            if (!turmaExiste)
+                return NotFound("Turma não encontrada.");
+
+            
+            var horarioIds = await _context.Blocos
+                .Where(b => b.Aula.TurmaFK == id)
+                .SelectMany(b => b.Horarios.Select(h => h.Id))
+                .Distinct()
+                .ToListAsync();
+
+            return Ok(horarioIds);
+            
         }
 
         // POST: api/Horarios
