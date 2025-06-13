@@ -2,6 +2,8 @@
 using IPT_Teste.Models;
 using Microsoft.EntityFrameworkCore;
 using IPT_Teste.Data;
+using Microsoft.AspNetCore.SignalR;
+using WebApplication1.Controllers.API;
 
 namespace IPT_Teste.Controllers.API
 {
@@ -10,10 +12,12 @@ namespace IPT_Teste.Controllers.API
     public class BlocosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<BlocoHubController> _hubContext;
 
-        public BlocosController(ApplicationDbContext context)
+        public BlocosController(IHubContext<BlocoHubController> hubContext, ApplicationDbContext context)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // GET: api/Blocos
@@ -97,6 +101,11 @@ namespace IPT_Teste.Controllers.API
 
             _context.Blocos.Remove(bloco);
             await _context.SaveChangesAsync();
+            
+            await _hubContext.Clients.All.SendAsync("BlocoRemovido", new
+            {
+                BlocoId = id
+            });
 
             return NoContent();
         }
