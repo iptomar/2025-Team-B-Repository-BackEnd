@@ -65,9 +65,20 @@ namespace IPT_Teste.Controllers.API
 
         // POST: api/Horarios
         [HttpPost]
-        public async Task<ActionResult<Horarios>> PostHorario(Horarios horario)
+        public async Task<ActionResult<Horarios>> PostHorario(Horario2DTO horario)
         {
-            _context.Horarios.Add(horario);
+            var bloco = await _context.Blocos. 
+                Where(b => b.Id == 94). 
+                ToListAsync();
+
+            var horariofin = new Horarios
+            {
+                Inicio = horario.Inicio,
+                Fim = horario.Fim,
+                Blocos = bloco,
+            };
+            
+            _context.Horarios.Add(horariofin);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetHorario), new { id = horario.Id }, horario);
