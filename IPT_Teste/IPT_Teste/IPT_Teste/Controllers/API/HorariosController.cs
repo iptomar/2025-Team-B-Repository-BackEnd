@@ -54,8 +54,12 @@ namespace IPT_Teste.Controllers.API
                 .SelectMany(b => b.Horarios.Select(h => h.Id))
                 .Distinct()
                 .ToListAsync();
+            
+            var horario = await _context.Horarios. 
+                Where(h => h.Id == horarioIds.FirstOrDefault()). 
+                ToListAsync();
 
-            return Ok(horarioIds);
+            return Ok(horario);
             
         }
 
