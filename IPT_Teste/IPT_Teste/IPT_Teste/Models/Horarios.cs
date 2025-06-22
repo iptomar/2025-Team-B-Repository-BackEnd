@@ -14,6 +14,10 @@ namespace IPT_Teste.Models
 
         public required DateOnly Fim { get; set; }
 
+        public int? TurmaFK { get; set; }
+        [ForeignKey("TurmaFK")]
+        public Turmas? Turma { get; set; }
+
         public ICollection<Blocos> Blocos { get; set; } = new List<Blocos>();
     }
 }

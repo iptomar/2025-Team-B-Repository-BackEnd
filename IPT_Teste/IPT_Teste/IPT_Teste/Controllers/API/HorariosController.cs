@@ -48,15 +48,8 @@ namespace IPT_Teste.Controllers.API
             if (!turmaExiste)
                 return NotFound("Turma não encontrada.");
 
-            
-            var horarioIds = await _context.Blocos
-                .Where(b => b.Aula.TurmaFK == id)
-                .SelectMany(b => b.Horarios.Select(h => h.Id))
-                .Distinct()
-                .ToListAsync();
-            
             var horario = await _context.Horarios. 
-                Where(h => h.Id == horarioIds.FirstOrDefault()). 
+                Where(h => h.TurmaFK == id). 
                 ToListAsync();
 
             return Ok(horario);
