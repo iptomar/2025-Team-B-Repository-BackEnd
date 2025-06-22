@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using IPT_Teste.Models;
 using IPT_Teste.Data;
 using IPT_Teste.Models.DTOs;
+using Azure.Core;
 
 namespace IPT_Teste.Controllers.API
 {
@@ -49,12 +50,46 @@ namespace IPT_Teste.Controllers.API
                 return NotFound("Turma não encontrada.");
 
             var horario = await _context.Horarios. 
-                Where(h => h.TurmaFK == id). 
+                Where(h => h.TurmaFK == id).
+                Include(h => h.Turma).
                 ToListAsync();
 
             return Ok(horario);
             
         }
+
+        [HttpPost("SetStatus/{id}/{status}")]
+        public async Task<ActionResult> SetStatus(int id, int status)
+        {
+
+            // Fake database lookup
+            var horario = await _context.Horarios.FindAsync(id);
+            if (horario == null)
+            {
+                return NotFound($"Horario {id} não encontrado.");
+            }
+
+            horario.Estado = (EstadoHorario)status;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HorarioExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
 
         // POST: api/Horarios
         [HttpPost]
@@ -68,6 +103,8 @@ namespace IPT_Teste.Controllers.API
             {
                 Inicio = horario.Inicio,
                 Fim = horario.Fim,
+                TurmaFK = horario.TurmaFK,
+                Estado = EstadoHorario.EDITAVEL,
                 Blocos = bloco,
             };
             

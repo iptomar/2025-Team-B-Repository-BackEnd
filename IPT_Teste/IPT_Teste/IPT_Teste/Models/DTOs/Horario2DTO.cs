@@ -8,5 +8,7 @@ public class Horario2DTO
 
     public required DateOnly Fim { get; set; }
 
+    public required int TurmaFK { get; set; }
+
     public List<int> Blocos { get; set; } 
 }
