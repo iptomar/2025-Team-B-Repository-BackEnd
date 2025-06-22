@@ -64,6 +64,26 @@ namespace IPT_Teste.Controllers.API
 
         }
 
+        // GET: api/Blocos/Horario/5
+        [HttpGet("Horario/{id}")]
+        public async Task<ActionResult<Blocos>> GetBlocoPorHorario(int id)
+        {
+
+            var horario = await _context.Horarios
+                .Include(h => h.Blocos)
+                .Where(h => h.Id == id)
+                .Select(h => h.Blocos)
+                .ToListAsync();
+
+            if (horario == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(horario);
+
+        }
+
         // POST: api/Blocos
         [HttpPost]
         public async Task<ActionResult<Blocos>> PostBloco(Blocos bloco)
