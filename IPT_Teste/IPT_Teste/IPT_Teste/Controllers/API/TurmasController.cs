@@ -27,7 +27,7 @@ namespace IPT_Teste.Controllers.API
         [HttpGet("{id}")]
         public async Task<ActionResult<Turmas>> GetTurma(int id)
         {
-            var turma = await _context.Turmas.Include(t => t.Curso)
+            var turma = await _context.Turmas.Include(t => t.Curso.Professor)
                                              .FirstOrDefaultAsync(t => t.Id == id);
 
             if (turma == null)

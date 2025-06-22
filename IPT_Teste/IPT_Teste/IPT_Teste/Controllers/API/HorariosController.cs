@@ -51,7 +51,7 @@ namespace IPT_Teste.Controllers.API
 
             var horario = await _context.Horarios. 
                 Where(h => h.TurmaFK == id).
-                Include(h => h.Turma).
+                Include(h => h.Turma.Curso.Professor).
                 ToListAsync();
 
             return Ok(horario);
