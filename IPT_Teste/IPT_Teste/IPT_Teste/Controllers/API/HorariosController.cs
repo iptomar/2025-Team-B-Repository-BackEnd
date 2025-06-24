@@ -61,6 +61,7 @@ namespace IPT_Teste.Controllers.API
 
             var horariosPendentes = await _context.Horarios
                 .Where(h => (int) h.Estado == 1)
+                .Include(h => h.Turma.Curso)
                 .ToListAsync();
 
             return Ok(horariosPendentes);
