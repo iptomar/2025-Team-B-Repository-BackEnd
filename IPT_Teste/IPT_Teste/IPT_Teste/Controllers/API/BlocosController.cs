@@ -105,8 +105,9 @@ namespace IPT_Teste.Controllers.API
 
             _context.Entry(bloco).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            
-            await _hubContext.Clients.All.SendAsync("BlocoUpdate", bloco);
+
+            await _hubContext.Clients.Group($"bloco_{bloco.Id}")
+                .SendAsync("UpdateBloco", bloco);
 
             return NoContent();
         }
