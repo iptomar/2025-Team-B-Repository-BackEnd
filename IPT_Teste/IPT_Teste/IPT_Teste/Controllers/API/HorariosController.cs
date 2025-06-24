@@ -4,6 +4,7 @@ using IPT_Teste.Models;
 using IPT_Teste.Data;
 using IPT_Teste.Models.DTOs;
 using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace IPT_Teste.Controllers.API
 {
@@ -12,10 +13,12 @@ namespace IPT_Teste.Controllers.API
     public class HorariosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HorariosController(ApplicationDbContext context)
+        public HorariosController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Horarios
@@ -40,6 +43,27 @@ namespace IPT_Teste.Controllers.API
             }
 
             return Ok(horario);
+        }
+
+        [HttpGet("pendentes")]
+        public async Task<ActionResult<Horarios>> GetHorariosByUser([FromQuery]string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return NotFound("Utilizador nao encontrado");
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (!roles.Contains("Administrador") && !roles.Contains("Comissão de Horários") && !roles.Contains("Diretor/a"))
+            {
+                return BadRequest(); 
+            }
+
+            var horariosPendentes = await _context.Horarios
+                .Where(h => (int) h.Estado == 1)
+                .ToListAsync();
+
+            return Ok(horariosPendentes);
         }
 
         [HttpPost("horarios-turma")]
