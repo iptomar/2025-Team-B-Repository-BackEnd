@@ -54,7 +54,7 @@ namespace IPT_Teste.Controllers.API
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            if (!roles.Contains("Administrador") && !roles.Contains("Comissão de Horários") && !roles.Contains("Diretor/a"))
+            if (!roles.Contains("Admistrador") && !roles.Contains("Comissão de Horários") && !roles.Contains("Diretor/a"))
             {
                 return BadRequest(); 
             }
