@@ -103,10 +103,14 @@ namespace IPT_Teste.Controllers.API
                 return BadRequest();
             }
 
+            var horarioId = await _context.Horarios.
+                Include(h => h.Blocos).
+                FirstOrDefaultAsync(h => h.Blocos.Any(b => b.Id == id));
+
             _context.Entry(bloco).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-
-            await _hubContext.Clients.Group($"bloco_{bloco.Id}")
+        
+            await _hubContext.Clients.Group($"horario_{horarioId}")
                 .SendAsync("UpdateBloco", bloco);
 
             return NoContent();
