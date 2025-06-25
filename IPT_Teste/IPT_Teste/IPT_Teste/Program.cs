@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IPT_Teste.Data;
+using WebApplication1.Controllers.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+builder.Services.AddSignalR();
 
 var jwtKey = builder.Configuration["Jwt:Key"] ?? Environment.GetEnvironmentVariable("JWT_KEY");
 
@@ -64,7 +66,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
+app.MapHub<BlocoHubController>("hubdobloco");
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

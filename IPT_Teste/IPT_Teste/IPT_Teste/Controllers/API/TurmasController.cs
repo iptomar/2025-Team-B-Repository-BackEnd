@@ -41,8 +41,7 @@ namespace IPT_Teste.Controllers.API
         [HttpGet("{id}")]
         public async Task<ActionResult<Turmas>> GetTurma(int id)
         {
-            // Pesquisa de turma e curso associado de acordo com o id de turma fornecidos
-            var turma = await _context.Turmas.Include(t => t.Curso)
+            var turma = await _context.Turmas.Include(t => t.Curso.Professor)
                                              .FirstOrDefaultAsync(t => t.Id == id);
             
             // Se não existir turma com o id fornecido, retorna NotFound

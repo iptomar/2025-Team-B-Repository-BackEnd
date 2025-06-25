@@ -4,6 +4,7 @@ using IPT_Teste.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IPT_Teste.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606211337_DiaDaSemana")]
+    partial class DiaDaSemana
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,21 +227,13 @@ namespace IPT_Teste.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("Estado")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly>("Fim")
                         .HasColumnType("date");
 
                     b.Property<DateOnly>("Inicio")
                         .HasColumnType("date");
 
-                    b.Property<int?>("TurmaFK")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TurmaFK");
 
                     b.ToTable("Horarios");
                 });
@@ -688,15 +683,6 @@ namespace IPT_Teste.Migrations
                     b.Navigation("Instituicao");
 
                     b.Navigation("Professor");
-                });
-
-            modelBuilder.Entity("IPT_Teste.Models.Horarios", b =>
-                {
-                    b.HasOne("IPT_Teste.Models.Turmas", "Turma")
-                        .WithMany()
-                        .HasForeignKey("TurmaFK");
-
-                    b.Navigation("Turma");
                 });
 
             modelBuilder.Entity("IPT_Teste.Models.Instituicoes", b =>

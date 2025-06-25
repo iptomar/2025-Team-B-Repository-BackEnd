@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using IPT_Teste.Models;
 using IPT_Teste.Data;
+using IPT_Teste.Models.DTOs;
+using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace IPT_Teste.Controllers.API
 {
@@ -10,14 +13,12 @@ namespace IPT_Teste.Controllers.API
     public class HorariosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        /// <summary>
-        /// Adição da Injeção da Base de Dados
-        /// </summary>
-        /// <param name="context">variável de conexão</param>
-        public HorariosController(ApplicationDbContext context)
+        public HorariosController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Horarios
@@ -53,9 +54,79 @@ namespace IPT_Teste.Controllers.API
                 return NotFound();
             }
 
-            // Retorna o horário e blocos associados encontrado
             return Ok(horario);
         }
+
+        [HttpGet("pendentes")]
+        public async Task<ActionResult<Horarios>> GetHorariosByUser([FromQuery]string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return NotFound("Utilizador nao encontrado");
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (!roles.Contains("Admistrador") && !roles.Contains("Comissão de Horários") && !roles.Contains("Diretor/a"))
+            {
+                return BadRequest(); 
+            }
+
+            var horariosPendentes = await _context.Horarios
+                .Where(h => (int) h.Estado == 1)
+                .Include(h => h.Turma.Curso)
+                .ToListAsync();
+
+            return Ok(horariosPendentes);
+        }
+
+        [HttpPost("horarios-turma")]
+        public async Task<ActionResult> GetHorarioTurma([FromBody] int id)
+        {
+            var turmaExiste = await _context.Turmas.AnyAsync(t => t.Id == id);
+            if (!turmaExiste)
+                return NotFound("Turma não encontrada.");
+
+            var horario = await _context.Horarios. 
+                Where(h => h.TurmaFK == id).
+                Include(h => h.Turma.Curso.Professor).
+                ToListAsync();
+
+            return Ok(horario);
+            
+        }
+
+        [HttpPost("SetStatus/{id}/{status}")]
+        public async Task<ActionResult> SetStatus(int id, int status)
+        {
+
+            // Fake database lookup
+            var horario = await _context.Horarios.FindAsync(id);
+            if (horario == null)
+            {
+                return NotFound($"Horario {id} não encontrado.");
+            }
+
+            horario.Estado = (EstadoHorario)status;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HorarioExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
 
         // POST: api/Horarios
         /// <summary>
@@ -64,19 +135,22 @@ namespace IPT_Teste.Controllers.API
         /// <param name="horario">conector da classe horário</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<Horarios>> PostHorario(Horarios horario)
+        public async Task<ActionResult<Horarios>> PostHorario(Horario2DTO horario)
         {
-            // Verifica se o horário existe na base de dados de acordo com o seu id
-            bool exists = await _context.Horarios.AnyAsync(h => h.Id == horario.Id);
+            var bloco = await _context.Blocos. 
+                Where(b => b.Id == 94). 
+                ToListAsync();
 
-            // Se já existir a horário, retorna BadRequest
-            if (exists)
+            var horariofin = new Horarios
             {
-                return BadRequest("Já existe um horário de acordo com o seu id.");
-            }
-
-            // Adiciona o novo horário à base de dados e salva as alterações
-            _context.Horarios.Add(horario);
+                Inicio = horario.Inicio,
+                Fim = horario.Fim,
+                TurmaFK = horario.TurmaFK,
+                Estado = EstadoHorario.EDITAVEL,
+                Blocos = bloco,
+            };
+            
+            _context.Horarios.Add(horariofin);
             await _context.SaveChangesAsync();
 
             // Retorna uma resposta de sucesso com o horário criada

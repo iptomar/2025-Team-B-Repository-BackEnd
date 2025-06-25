@@ -12,6 +12,8 @@ namespace IPT_Teste.Models
 
         public required TimeOnly Hora_Inicio { get; set; }
 
+        public required int DiaDaSemana { get; set; }
+
         public required int SalaFK { get; set; }
         [ForeignKey("SalaFK")]
         public Salas? Sala { get; set; }
