@@ -145,12 +145,23 @@ namespace IPT_Teste.Controllers.API
                 Include(h => h.Blocos).
                 FirstOrDefaultAsync(h => h.Blocos.Any(b => b.Id == id));
 
+            var existingBloco = horarioId.Blocos.First(b => b.Id == id);
+            _context.Entry(existingBloco).State = EntityState.Detached;
+
             _context.Entry(bloco).State = EntityState.Modified;
             // Atualização realizada com sucesso
             await _context.SaveChangesAsync();
-        
-            await _hubContext.Clients.Group($"horario_{horarioId}")
-                .SendAsync("UpdateBloco", bloco);
+
+            await _hubContext.Clients.Group($"horario_{horarioId.Id}")
+            .SendAsync("NovoBlocoCriado", new
+            {
+                Id = bloco.Id,
+                HorarioId = horarioId.Id,
+                HoraInicio = bloco.Hora_Inicio,
+                DiaDaSemana = bloco.DiaDaSemana,
+                SalaFK = bloco.SalaFK,
+                AulaFK = bloco.AulaFK,
+            });
 
             return NoContent();
         }
@@ -175,7 +186,11 @@ namespace IPT_Teste.Controllers.API
             // Apaga o mesmo e salva as alterações na BD
             _context.Blocos.Remove(bloco);
             await _context.SaveChangesAsync();
-            
+
+            var horarioId = await _context.Horarios.
+                Include(h => h.Blocos).
+                FirstOrDefaultAsync(h => h.Blocos.Any(b => b.Id == id));
+
             await _hubContext.Clients.All.SendAsync("BlocoRemovido", new
             {
                 BlocoId = id
