@@ -92,20 +92,7 @@ public class SignalRController: Controller
         
         var inicio = dto.HoraInicio;
         var duracao_int = aula.Duracao.Hour * 60 + aula.Duracao.Minute;
-        var fim = inicio.AddMinutes(duracao_int);
-
-        foreach (var b in horario.Blocos)
-        {
-            var inicioexistente = b.Hora_Inicio;
-            var duracaoExistenteMin = b.Aula.Duracao.Hour * 60 + b.Aula.Duracao.Minute;
-            var fimexistente = inicioexistente.AddMinutes(duracao_int);
-            
-            if (b.DiaDaSemana == dto.DiaDaSemana && (inicio < fimexistente && inicioexistente < fim))
-            {
-                return Conflict("A aula colide com outro bloco existente.");
-            }
-        }
-        
+        var fim = inicio.AddMinutes(duracao_int);    
         
 
         var bloco = new Blocos
