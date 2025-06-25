@@ -9,7 +9,8 @@ namespace IPT_Teste.Models
     {
         EDITAVEL = 0,
         POR_APROVAR = 1,
-        APROVADO = 2
+        APROVADO = 2,
+        REJEITADO = 3
     }
 
     public class Horarios
