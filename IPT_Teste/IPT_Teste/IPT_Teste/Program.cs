@@ -17,7 +17,13 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -_";
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyz" +
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        "0123456789" +
+        " -_" +
+        "áàâãéêíóôõúüç" +
+        "ÁÀÂÃÉÊÍÓÔÕÚÜÇ";
 });
 
 builder.Services.AddControllersWithViews();
