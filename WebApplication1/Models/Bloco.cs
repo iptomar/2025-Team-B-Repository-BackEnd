@@ -1,0 +1,25 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebApplication1.Models
+{
+    public class Bloco
+    {
+        [Key]
+        public int Id_bloco { get; set; }
+
+        [Required]
+        [StringLength(5)]
+        public string Hora_inicio { get; set; }
+
+        [Required]
+        [StringLength(5)]
+        public string Hora_fim { get; set; }
+
+        [ForeignKey(nameof(Id_sala))]
+        public int Sala { get; set; }
+        public Sala Id_sala { get; set; }
+
+        public ICollection<Bloco_Horario> FKBlocoHorario { get; set; }
+    }
+}
